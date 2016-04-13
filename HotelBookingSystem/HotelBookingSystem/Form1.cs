@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+//For the DBUtil class.
+using DatabaseUtility;
+
 namespace HotelBookingSystem
 {
     public partial class Form1 : Form
@@ -21,42 +24,39 @@ namespace HotelBookingSystem
         List<Employee> employeeList = new List<Employee>();
         List<RoomService> roomServiceList = new List<RoomService>();
 
+        //Database Utility object.
+        DBUtil dbUtil = new DBUtil();
+
         public Form1()
         {
             InitializeComponent();
 
-            //Read from Database, and fill lists. 
-            customerListBuilder();
-            reservationListBuilder();
-            roomListBuilder();
-            billListBuilder();
-            creditCardListBuilder();
-            employeeListBuilder();
-            roomServiceListBuilder();
+            //Connect to Database.
+            try
+            {
+                dbUtil.Open();
+
+                //Read from Database, and fill lists. 
+                customerListBuilder();
+                reservationListBuilder();
+                roomListBuilder();
+                creditCardListBuilder();
+                employeeListBuilder();
+                roomServiceListBuilder();
+                billListBuilder();
+            }
+            catch
+            {
+                MessageBox.Show("Error connecting to database. Please check connection to the database.");
+            }
+            finally
+            {
+                dbUtil.Close();
+            }
         }
 
         //---------------------------WELCOME TAB---------------------------\\
 
-        //Sign in button
-        private void button15_Click(object sender, EventArgs e)
-        {
-            //Make sure fields aren't empty.
-
-            
-            //Checks that username/password match
-            //DEBUG
-            if(textBox19.Text == "testuser" && textBox20.Text == "password")
-            {
-                //Welcome message appears.
-                label23.Text = "Welcome, testuser";
-                
-                //Enables tabs for navigation.
-                tabControl1.Enabled = true;
-            } else
-            {
-                MessageBox.Show("Invalid login");
-            }
-        }
 
         //---------------------------CHECK-IN TAB---------------------------\\
 
@@ -126,7 +126,9 @@ namespace HotelBookingSystem
             DialogResult dialogResult = MessageBox.Show("DISPLAY HERE", "Order confirmation", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
-                //Process room service order. Add price to user's bill.
+                //Process room service order.
+
+                //Clear all fields.
             }
             else if (dialogResult == DialogResult.No)
             {
@@ -188,28 +190,156 @@ namespace HotelBookingSystem
             }
             else
             {
-                //Displaying what is in the bill object.
-                
-                
                 //Creating the form object.
-                //Form5 viewBillForm = new Form5();
+                Form5 viewBillForm = new Form5();
 
-                //Passing the customer object to the new form.
-                //viewBillForm.loadBill(billList[listBox8.SelectedIndex]);
+                //Passing the bill object to the new form.
+                viewBillForm.loadBill(billList[listBox8.SelectedIndex]);
 
-                //viewBillForm.Show();
+                //Passing the customer object to the new form, depending on customer ID on bill object.
+                Customer customerToLoad = new Customer();
+                int customerListSize = customerList.Count();
+                int customerID = billList[listBox8.SelectedIndex].CustomerID;
+
+                for (int x = 0; x < customerListSize; x++)
+                {
+                    if(customerList[x].CustomerID == customerID)
+                    {
+                        customerToLoad = customerList[x];
+                    }
+                }
+                
+                viewBillForm.loadCustomer(customerToLoad);
+
+                //Passing the reservation object to the new form, depdening on reservation ID on bill object
+                Reservation reservationToLoad = new Reservation();
+                int reservationListSize = reservationList.Count();
+                int reservationID = billList[listBox8.SelectedIndex].ReservationID;
+
+                for (int x = 0; x < reservationListSize; x++)
+                {
+                    if (reservationList[x].ReservationID == reservationID)
+                    {
+                        reservationToLoad = reservationList[x];
+                    }
+                }
+
+                viewBillForm.loadReservation(reservationToLoad);
+
+                //Passing the room object to the new form, depending on room ID on reservation object previously loaded
+                Room roomToLoad = new Room();
+                int roomListSize = roomList.Count();
+                int roomID = reservationToLoad.RoomNumber;
+
+                for (int x = 0; x < roomListSize; x++)
+                {
+                    if(roomList[x].RoomNumber == roomID)
+                    {
+                        roomToLoad = roomList[x];
+                    }
+                }
+
+                viewBillForm.loadRoom(roomToLoad);
+
+                //Passes a (potentially blank) room service object, based on the room service ID on the bill object
+                RoomService roomServiceToLoad = new RoomService();
+                int roomServiceListSize = roomServiceList.Count();
+                int roomServiceID = billList[listBox8.SelectedIndex].RoomServiceID;
+
+                for (int x = 0; x < roomServiceListSize; x++)
+                {
+                    if(roomServiceList[x].RoomServiceID == roomServiceID)
+                    {
+                        roomServiceToLoad = roomServiceList[x];
+                    }
+                }
+
+                viewBillForm.loadRoomService(roomServiceToLoad);
+
+                viewBillForm.Show();
             }
         }
 
         //Pay bill button
         private void button17_Click(object sender, EventArgs e)
         {
+            if(listBox8.SelectedIndex == -1)
+            {
+                MessageBox.Show("Please choose a bill.");
+            } else
+            {
+                RoomService roomServiceToLoad = new RoomService();
+                int roomServiceListSize = roomServiceList.Count();
+                int roomServiceID = billList[listBox8.SelectedIndex].RoomServiceID;
 
+                for (int x = 0; x < roomServiceListSize; x++)
+                {
+                    if (roomServiceList[x].RoomServiceID == roomServiceID)
+                    {
+                        roomServiceToLoad = roomServiceList[x];
+                    }
+                }
+
+                Form6 paymentForm = new Form6();
+                paymentForm.loadBill(billList[listBox8.SelectedIndex]);
+                paymentForm.loadRoomService(roomServiceToLoad);
+                paymentForm.Show();
+            }
         }
 
         //---------------------------REPORTS TAB---------------------------\\
 
         //---------------------------ADMIN TAB---------------------------\\
+
+        //Login button
+        private void button18_Click(object sender, EventArgs e)
+        {
+            //If button says Login, login actions run. If it says Logout, it reverses everything.
+            if(button18.Text == "Login")
+            {
+                if (textBox21.Text == "admin" && textBox22.Text == "admin123")
+                {
+                    //Lists and buttons become active.
+                    listBox6.Enabled = true;
+                    listBox7.Enabled = true;
+                    button10.Enabled = true;
+                    button11.Enabled = true;
+                    button12.Enabled = true;
+                    button13.Enabled = true;
+
+                    //Disables textfields.
+                    textBox21.Enabled = false;
+                    textBox22.Enabled = false;
+
+                    //Changes button text.
+                    button18.Text = "Logout";
+                }
+                else
+                {
+                    MessageBox.Show("Invalid login");
+                }
+            } else
+            {
+                //Lists and buttons become inactive.
+                listBox6.Enabled = false;
+                listBox7.Enabled = false;
+                button10.Enabled = false;
+                button11.Enabled = false;
+                button12.Enabled = false;
+                button13.Enabled = false;
+
+                //Enables textfields.
+                textBox21.Enabled = true;
+                textBox22.Enabled = true;
+
+                //Clears textfields.
+                textBox21.Text = "";
+                textBox22.Text = "";
+
+                //Changes button text.
+                button18.Text = "Login";
+            }
+        }
 
         //Delete User
         private void button10_Click(object sender, EventArgs e)
@@ -312,10 +442,34 @@ namespace HotelBookingSystem
             createFakeBills();
 
             int listSize = billList.Count();
+            RoomService roomService = new RoomService();
+            int roomServiceListSize = roomServiceList.Count();
+            double roomServiceCost;
+            double roomCost;
 
             for (int x = 0; x < listSize; x++)
             {
-                String displayString = (billList[x].BillID + " - $" + billList[x].TotalPrice);
+                //Sets room service ID to current bill's room service ID.
+                int roomServiceID = billList[x].RoomServiceID;
+                roomServiceCost = 0.00;
+                roomCost = 0.00;
+
+                if (roomServiceID != 0)
+                {
+                    for(int y = 0; y < roomServiceListSize; y++)
+                    {
+                        if(roomServiceList[y].RoomServiceID == roomServiceID)
+                        {
+                            roomService = roomServiceList[y];
+                        }
+                    }
+
+                    roomServiceCost = roomService.TotalPrice;
+                }
+
+                roomCost = billList[x].TotalPrice;
+                double finalPrice = (roomCost + roomServiceCost);
+                String displayString = (billList[x].BillID + " - $" + finalPrice);
                 listBox8.Items.Add(displayString);
             }
         }
@@ -422,9 +576,9 @@ namespace HotelBookingSystem
 
         private void createFakeReservations()
         {
-            Reservation fakeReservation1 = new Reservation(001, 001, "206", new DateTime(2015, 4, 10), new DateTime(2015, 4, 12));
-            Reservation fakeReservation2 = new Reservation(002, 001, "304", new DateTime(2015, 5, 14), new DateTime(2015, 5, 15));
-            Reservation fakeReservation3 = new Reservation(003, 001, "808", new DateTime(2015, 6, 05), new DateTime(2015, 6, 09));
+            Reservation fakeReservation1 = new Reservation(001, 001, "262", new DateTime(2015, 4, 10), new DateTime(2015, 4, 12));
+            Reservation fakeReservation2 = new Reservation(002, 001, "716", new DateTime(2015, 5, 14), new DateTime(2015, 5, 15));
+            Reservation fakeReservation3 = new Reservation(003, 001, "377", new DateTime(2015, 6, 05), new DateTime(2015, 6, 09));
 
             reservationList.Add(fakeReservation1);
             reservationList.Add(fakeReservation2);
@@ -433,9 +587,9 @@ namespace HotelBookingSystem
 
         private void createFakeBills()
         {
-            Bill fakeBill1 = new Bill(1, 1, 1, true, 100.00);
-            Bill fakeBill2 = new Bill(2, 2, 2, false, 85.23);
-            Bill fakeBill3 = new Bill(3, 3, 3, false, 141.36);
+            Bill fakeBill1 = new Bill(1, 1, 1, true, 100.00, 001, 001);
+            Bill fakeBill2 = new Bill(2, 2, 2, false, 85.23, 002);
+            Bill fakeBill3 = new Bill(3, 3, 3, false, 141.36, 003, 002);
 
             billList.Add(fakeBill1);
             billList.Add(fakeBill2);

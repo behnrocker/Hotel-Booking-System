@@ -18,7 +18,7 @@ namespace HotelBookingSystem
 
         public RoomService()
         {
-
+            roomServiceID = 0;
         }
 
         public RoomService(String item, int custID, int room, String instructions, double price, DateTime ordered)

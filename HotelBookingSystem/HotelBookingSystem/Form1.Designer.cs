@@ -31,13 +31,6 @@
             this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.label23 = new System.Windows.Forms.Label();
-            this.button15 = new System.Windows.Forms.Button();
-            this.textBox20 = new System.Windows.Forms.TextBox();
-            this.textBox19 = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.monthCalendar2 = new System.Windows.Forms.MonthCalendar();
@@ -99,6 +92,8 @@
             this.textBox16 = new System.Windows.Forms.TextBox();
             this.listBox5 = new System.Windows.Forms.ListBox();
             this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.button17 = new System.Windows.Forms.Button();
+            this.button16 = new System.Windows.Forms.Button();
             this.listBox8 = new System.Windows.Forms.ListBox();
             this.tabPage8 = new System.Windows.Forms.TabPage();
             this.tabPage9 = new System.Windows.Forms.TabPage();
@@ -109,8 +104,11 @@
             this.listBox7 = new System.Windows.Forms.ListBox();
             this.listBox6 = new System.Windows.Forms.ListBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.button16 = new System.Windows.Forms.Button();
-            this.button17 = new System.Windows.Forms.Button();
+            this.textBox21 = new System.Windows.Forms.TextBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.textBox22 = new System.Windows.Forms.TextBox();
+            this.button18 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -141,13 +139,6 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.label23);
-            this.tabPage1.Controls.Add(this.button15);
-            this.tabPage1.Controls.Add(this.textBox20);
-            this.tabPage1.Controls.Add(this.textBox19);
-            this.tabPage1.Controls.Add(this.label22);
-            this.tabPage1.Controls.Add(this.label21);
-            this.tabPage1.Controls.Add(this.label20);
             this.tabPage1.Controls.Add(this.label19);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
@@ -156,67 +147,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Welcome";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(295, 107);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(41, 13);
-            this.label23.TabIndex = 7;
-            this.label23.Text = "label23";
-            // 
-            // button15
-            // 
-            this.button15.Location = new System.Drawing.Point(285, 240);
-            this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(75, 23);
-            this.button15.TabIndex = 6;
-            this.button15.Text = "Sign In";
-            this.button15.UseVisualStyleBackColor = true;
-            this.button15.Click += new System.EventHandler(this.button15_Click);
-            // 
-            // textBox20
-            // 
-            this.textBox20.Location = new System.Drawing.Point(285, 214);
-            this.textBox20.Name = "textBox20";
-            this.textBox20.PasswordChar = '*';
-            this.textBox20.Size = new System.Drawing.Size(129, 20);
-            this.textBox20.TabIndex = 5;
-            // 
-            // textBox19
-            // 
-            this.textBox19.Location = new System.Drawing.Point(285, 188);
-            this.textBox19.Name = "textBox19";
-            this.textBox19.Size = new System.Drawing.Size(129, 20);
-            this.textBox19.TabIndex = 4;
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(224, 217);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(53, 13);
-            this.label22.TabIndex = 3;
-            this.label22.Text = "Password";
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(224, 191);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(55, 13);
-            this.label21.TabIndex = 2;
-            this.label21.Text = "Username";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(282, 150);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(75, 13);
-            this.label20.TabIndex = 1;
-            this.label20.Text = "Please Sign In";
             // 
             // label19
             // 
@@ -792,6 +722,26 @@
             this.tabPage7.Text = "Bills";
             this.tabPage7.UseVisualStyleBackColor = true;
             // 
+            // button17
+            // 
+            this.button17.Location = new System.Drawing.Point(368, 310);
+            this.button17.Name = "button17";
+            this.button17.Size = new System.Drawing.Size(75, 23);
+            this.button17.TabIndex = 2;
+            this.button17.Text = "Pay Bill";
+            this.button17.UseVisualStyleBackColor = true;
+            this.button17.Click += new System.EventHandler(this.button17_Click);
+            // 
+            // button16
+            // 
+            this.button16.Location = new System.Drawing.Point(218, 310);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(75, 23);
+            this.button16.TabIndex = 1;
+            this.button16.Text = "View";
+            this.button16.UseVisualStyleBackColor = true;
+            this.button16.Click += new System.EventHandler(this.button16_Click);
+            // 
             // listBox8
             // 
             this.listBox8.FormattingEnabled = true;
@@ -812,6 +762,11 @@
             // 
             // tabPage9
             // 
+            this.tabPage9.Controls.Add(this.button18);
+            this.tabPage9.Controls.Add(this.label25);
+            this.tabPage9.Controls.Add(this.textBox22);
+            this.tabPage9.Controls.Add(this.label24);
+            this.tabPage9.Controls.Add(this.textBox21);
             this.tabPage9.Controls.Add(this.button13);
             this.tabPage9.Controls.Add(this.button12);
             this.tabPage9.Controls.Add(this.button11);
@@ -828,7 +783,8 @@
             // 
             // button13
             // 
-            this.button13.Location = new System.Drawing.Point(494, 298);
+            this.button13.Enabled = false;
+            this.button13.Location = new System.Drawing.Point(496, 348);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(82, 23);
             this.button13.TabIndex = 5;
@@ -838,7 +794,8 @@
             // 
             // button12
             // 
-            this.button12.Location = new System.Drawing.Point(388, 298);
+            this.button12.Enabled = false;
+            this.button12.Location = new System.Drawing.Point(390, 348);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(85, 23);
             this.button12.TabIndex = 4;
@@ -848,7 +805,8 @@
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(178, 298);
+            this.button11.Enabled = false;
+            this.button11.Location = new System.Drawing.Point(180, 348);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(75, 23);
             this.button11.TabIndex = 3;
@@ -858,7 +816,8 @@
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(82, 298);
+            this.button10.Enabled = false;
+            this.button10.Location = new System.Drawing.Point(84, 348);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(75, 23);
             this.button10.TabIndex = 2;
@@ -868,16 +827,18 @@
             // 
             // listBox7
             // 
+            this.listBox7.Enabled = false;
             this.listBox7.FormattingEnabled = true;
-            this.listBox7.Location = new System.Drawing.Point(354, 28);
+            this.listBox7.Location = new System.Drawing.Point(356, 78);
             this.listBox7.Name = "listBox7";
             this.listBox7.Size = new System.Drawing.Size(255, 251);
             this.listBox7.TabIndex = 1;
             // 
             // listBox6
             // 
+            this.listBox6.Enabled = false;
             this.listBox6.FormattingEnabled = true;
-            this.listBox6.Location = new System.Drawing.Point(41, 28);
+            this.listBox6.Location = new System.Drawing.Point(43, 78);
             this.listBox6.Name = "listBox6";
             this.listBox6.Size = new System.Drawing.Size(255, 251);
             this.listBox6.TabIndex = 0;
@@ -887,25 +848,48 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
-            // button16
+            // textBox21
             // 
-            this.button16.Location = new System.Drawing.Point(192, 315);
-            this.button16.Name = "button16";
-            this.button16.Size = new System.Drawing.Size(75, 23);
-            this.button16.TabIndex = 1;
-            this.button16.Text = "View";
-            this.button16.UseVisualStyleBackColor = true;
-            this.button16.Click += new System.EventHandler(this.button16_Click);
+            this.textBox21.Location = new System.Drawing.Point(111, 23);
+            this.textBox21.Name = "textBox21";
+            this.textBox21.Size = new System.Drawing.Size(132, 20);
+            this.textBox21.TabIndex = 6;
             // 
-            // button17
+            // label24
             // 
-            this.button17.Location = new System.Drawing.Point(380, 315);
-            this.button17.Name = "button17";
-            this.button17.Size = new System.Drawing.Size(75, 23);
-            this.button17.TabIndex = 2;
-            this.button17.Text = "Pay Bill";
-            this.button17.UseVisualStyleBackColor = true;
-            this.button17.Click += new System.EventHandler(this.button17_Click);
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(50, 26);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(55, 13);
+            this.label24.TabIndex = 7;
+            this.label24.Text = "Username";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(274, 26);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(53, 13);
+            this.label25.TabIndex = 9;
+            this.label25.Text = "Password";
+            // 
+            // textBox22
+            // 
+            this.textBox22.Location = new System.Drawing.Point(333, 23);
+            this.textBox22.Name = "textBox22";
+            this.textBox22.PasswordChar = '*';
+            this.textBox22.Size = new System.Drawing.Size(132, 20);
+            this.textBox22.TabIndex = 8;
+            // 
+            // button18
+            // 
+            this.button18.Location = new System.Drawing.Point(496, 21);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(75, 23);
+            this.button18.TabIndex = 10;
+            this.button18.Text = "Login";
+            this.button18.UseVisualStyleBackColor = true;
+            this.button18.Click += new System.EventHandler(this.button18_Click);
             // 
             // Form1
             // 
@@ -929,6 +913,7 @@
             this.tabPage6.PerformLayout();
             this.tabPage7.ResumeLayout(false);
             this.tabPage9.ResumeLayout(false);
+            this.tabPage9.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1007,16 +992,14 @@
         private System.Windows.Forms.ListBox listBox6;
         private System.Windows.Forms.Button button14;
         private System.Windows.Forms.ListBox listBox8;
-        private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.Button button15;
-        private System.Windows.Forms.TextBox textBox20;
-        private System.Windows.Forms.TextBox textBox19;
-        private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Button button17;
         private System.Windows.Forms.Button button16;
+        private System.Windows.Forms.Button button18;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.TextBox textBox22;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.TextBox textBox21;
     }
 }
 
