@@ -38,7 +38,7 @@ CREATE TABLE Room (roomNumber INT(10) PRIMARY KEY, roomTypeID INT(10), roomFloor
 
 CREATE TABLE RoomType (roomTypeID INT(10) PRIMARY KEY, bedSize VARCHAR(6), numberOfBeds INT(3), availability VARCHAR(1), specialItems VARCHAR(255), billAmount INT(20), maxCapacity INT(3), type VARCHAR(60));
 
-CREATE TABLE Bill (billID INT(10) PRIMARY KEY, customerID INT(10), roomTypeID INT(10), isPaid VARCHAR(1));
+CREATE TABLE Bill (billID INT(10) PRIMARY KEY, customerID INT(10), roomTypeID INT(10), isPaid VARCHAR(1), totalPrice VARCHAR(10), reservationID INT(10), roomServiceID INT(10));
 
 CREATE TABLE RoomService (roomServiceID INT(10) PRIMARY KEY, itemOrdered VARCHAR(255), customerID INT(10), roomNumber INT(10), specialInstructions VARCHAR(255), totalPrice INT(20), timeOrderedFor DATETIME);
 

@@ -10,6 +10,8 @@ using System.Windows.Forms;
 
 //For the DBUtil class.
 using DatabaseUtility;
+using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 
 namespace HotelBookingSystem
 {
@@ -23,6 +25,8 @@ namespace HotelBookingSystem
         List<CreditCard> creditCardList = new List<CreditCard>();
         List<Employee> employeeList = new List<Employee>();
         List<RoomService> roomServiceList = new List<RoomService>();
+        List<Reservation> checkedInReservationList = new List<Reservation>();
+        List<Reservation> checkedOutReservationList = new List<Reservation>();
 
         //Database Utility object.
         DBUtil dbUtil = new DBUtil();
@@ -40,10 +44,11 @@ namespace HotelBookingSystem
                 customerListBuilder();
                 reservationListBuilder();
                 roomListBuilder();
-                creditCardListBuilder();
+                creditCardListBuilder(); 
                 employeeListBuilder();
                 roomServiceListBuilder();
                 billListBuilder();
+                checkInListBuilder();
             }
             catch
             {
@@ -60,6 +65,7 @@ namespace HotelBookingSystem
 
         //---------------------------CHECK-IN TAB---------------------------\\
 
+        //NOT WORKING
         //Filter button
         private void button1_Click(object sender, EventArgs e)
         {
@@ -68,6 +74,7 @@ namespace HotelBookingSystem
             //Searches object list for fields that are valid. If variable is blank, that field is not searched.
         }
 
+        //NOT WORKING
         //Check-in button
         private void button2_Click(object sender, EventArgs e)
         {
@@ -77,6 +84,7 @@ namespace HotelBookingSystem
 
         //---------------------------CHECK-OUT TAB---------------------------\\
 
+        //NOT WORKING
         //Filter button
         private void button4_Click(object sender, EventArgs e)
         {
@@ -85,6 +93,7 @@ namespace HotelBookingSystem
             //Searches object list for fields that are valid. If variable is blank, that field is not searched.
         }
 
+        //NOT WORKING
         //Check-out button
         private void button3_Click(object sender, EventArgs e)
         {
@@ -93,6 +102,7 @@ namespace HotelBookingSystem
 
         //---------------------------RESERVATION TAB---------------------------\\
 
+        //WORKING
         //Reservations Tab > Create New Reservation Button
         private void button5_Click(object sender, EventArgs e)
         {
@@ -101,6 +111,7 @@ namespace HotelBookingSystem
             newReservationForm.Show();
         }
 
+        //NOT WORKING
         //When the date is changed in the calendar, the reservation ListBox updates with only reservations
         //from that specified day. (Calendar in Reservations tab)
         private void monthCalendar3_DateChanged(object sender, DateRangeEventArgs e)
@@ -108,6 +119,7 @@ namespace HotelBookingSystem
 
         }
 
+        //NOT WORKING
         //View button
         private void button6_Click(object sender, EventArgs e)
         {
@@ -116,8 +128,8 @@ namespace HotelBookingSystem
 
         //---------------------------ROOM SERVICE TAB---------------------------\\
 
-        
-        //Order button
+        //NOT WORKING
+        //Order button (Submits order)
         private void button8_Click(object sender, EventArgs e)
         {
 
@@ -136,6 +148,7 @@ namespace HotelBookingSystem
             }
         }
 
+        //NOT WORKING
         //Filter button
         private void button7_Click(object sender, EventArgs e)
         {
@@ -146,6 +159,7 @@ namespace HotelBookingSystem
 
         //---------------------------CUSTOMERS TAB---------------------------\\
 
+        //WORKING
         //Customer > Add new customer button
         private void button9_Click(object sender, EventArgs e)
         {
@@ -153,6 +167,7 @@ namespace HotelBookingSystem
             newCustomerForm.Show();
         }
 
+        //WORKING
         //View button
         private void button14_Click(object sender, EventArgs e)
         {
@@ -179,6 +194,7 @@ namespace HotelBookingSystem
 
         //---------------------------BILLS TAB---------------------------\\
 
+        //WORKING
         //View button
         private void button16_Click(object sender, EventArgs e)
         {
@@ -260,6 +276,7 @@ namespace HotelBookingSystem
             }
         }
 
+        //WORKING
         //Pay bill button
         private void button17_Click(object sender, EventArgs e)
         {
@@ -291,6 +308,7 @@ namespace HotelBookingSystem
 
         //---------------------------ADMIN TAB---------------------------\\
 
+        //WORKING
         //Login button
         private void button18_Click(object sender, EventArgs e)
         {
@@ -341,24 +359,28 @@ namespace HotelBookingSystem
             }
         }
 
+        //NOT WORKING
         //Delete User
         private void button10_Click(object sender, EventArgs e)
         {
 
         }
 
+        //NOT WORKING
         //Create User
         private void button11_Click(object sender, EventArgs e)
         {
 
         }
 
+        //NOT WORKING
         //Delete Room
         private void button12_Click(object sender, EventArgs e)
         {
 
         }
 
+        //NOT WORKING
         //Create Room
         private void button13_Click(object sender, EventArgs e)
         {
@@ -367,18 +389,40 @@ namespace HotelBookingSystem
 
         //---------------------------LIST BUILDERS---------------------------\\
 
+        //WORKING
         //Builds the customer object list.
         private void customerListBuilder()
         {
-            //Clears existing list, if needed.
+            //Clears existing list, to make sure all data is up to date in the list.
             customerList.Clear();
 
-            //Get connection to DB, and executes queries
+            MySqlCommand command = new MySqlCommand("SELECT * from CUSTOMER", dbUtil.Connection);
+            MySqlDataReader reader = command.ExecuteReader();
 
-            //Fills the customer objects, and adds to list.
-            //DEBUG
-            createFakeCustomers();
+            //Uses existing DB connection. Fills the customer objects, and adds to list.
+            try {
+                while (reader.Read())
+                {
+                    int customerID = reader.GetInt32(0);
+                    String firstName = reader.GetString(1);
+                    String lastName = reader.GetString(2);
+                    String streetAddress = reader.GetString(3);
+                    String city = reader.GetString(4);
+                    String province = reader.GetString(5);
+                    String postalCode = reader.GetString(6);
 
+                    Customer customer = new Customer(customerID, firstName, lastName, streetAddress, city, province, postalCode);
+                    customerList.Add(customer);
+                }
+            } catch(Exception e)
+            {
+                MessageBox.Show("Error constructing Customer List. Please try again. \n\n" + e.ToString());
+            } finally
+            {
+                reader.Close();
+            }
+
+            //Displays customers in listBox
             int listSize = customerList.Count();
 
             for (int x = 0; x < listSize; x++)
@@ -388,17 +432,47 @@ namespace HotelBookingSystem
             }
         }
 
+        //WORKING
         //Builds the reservation object list.
         private void reservationListBuilder()
         {
             //Clears existing list, if needed.
             reservationList.Clear();
 
-            //Get connection to DB, and executes queries
+            MySqlCommand command = new MySqlCommand("SELECT * from RESERVATION", dbUtil.Connection);
+            MySqlDataReader reader = command.ExecuteReader();
 
-            //Fills the reservation objects, and adds to list.
-            createFakeReservations();
+            //Uses existing DB connection. Fills the customer objects, and adds to list.
+            try
+            {
+                while (reader.Read())
+                {
+                    int reservationID = reader.GetInt32(0);
+                    int customerID = reader.GetInt32(1);
+                    DateTime checkInDate = reader.GetDateTime(2);
+                    DateTime checkOutDate = reader.GetDateTime(3);
+                    int roomNumber = reader.GetInt32(4);
+                    String checkedInString = reader.GetString(5);
+                    Boolean checkedIn = true;
 
+                    if(checkedInString == "0")
+                    {
+                        checkedIn = false;
+                    }
+
+                    Reservation reservation = new Reservation(customerID, reservationID, roomNumber, checkInDate, checkOutDate, checkedIn);
+                    reservationList.Add(reservation);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error constructing Reservation List. Please try again. \n\n" + e.ToString());
+            } finally
+            {
+                reader.Close();
+            }
+
+            //Displays reservations in listBox.
             int listSize = reservationList.Count();
 
             for (int x = 0; x < listSize; x++)
@@ -408,17 +482,36 @@ namespace HotelBookingSystem
             }
         }
         
+        //WORKING
         //Builds the room object list.
         private void roomListBuilder()
         {
             //Clears existing list, if needed.
             roomList.Clear();
 
-            //Get connection to DB, and executes queries
+            MySqlCommand command = new MySqlCommand("SELECT * from ROOM", dbUtil.Connection);
+            MySqlDataReader reader = command.ExecuteReader();
 
-            //Fills the room objects, and adds to list.
-            //DEBUG
-            createFakeRooms();
+            //Uses existing DB connection. Fills the customer objects, and adds to list.
+            try
+            {
+                while (reader.Read())
+                {
+                    int roomNumber = reader.GetInt32(0);
+                    int roomTypeID = reader.GetInt32(1);
+                    int roomFloor = reader.GetInt32(2);
+
+                    Room room = new Room(roomNumber, roomTypeID, roomFloor);
+                    roomList.Add(room);
+                }
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show("Error constructing Room List. Please try again. \n\n" + e.ToString());
+            } finally
+            {
+                reader.Close();
+            }
 
             int listSize = roomList.Count();
 
@@ -429,18 +522,49 @@ namespace HotelBookingSystem
             }
         }
 
+        //WORKING
         //Builds the bill object list.
         private void billListBuilder()
         {
-            //Clears existing list, if needed.
+            //Clears existing list, to make sure all data is up to date in the list.
             billList.Clear();
 
-            //Get connection to DB, and executes queries
+            MySqlCommand command = new MySqlCommand("SELECT * from BILL", dbUtil.Connection);
+            MySqlDataReader reader = command.ExecuteReader();
 
-            //Fills the bill objects, and adds to list.
-            //DEBUG
-            createFakeBills();
+            //Uses existing DB connection. Fills the customer objects, and adds to list.
+            try
+            {
+                while (reader.Read())
+                {
+                    int billID = reader.GetInt32(0);
+                    int customerID = reader.GetInt32(1);
+                    int roomTypeID = reader.GetInt32(2);
+                    Boolean isPaid = true;
+                    String isPaidString = reader.GetString(3);
+                    double totalPrice = reader.GetDouble(4);
+                    int reservationID = reader.GetInt32(5);
+                    int roomServiceID = reader.GetInt32(6);
 
+                    //Figures out boolean
+                    if (isPaidString == "0")
+                    {
+                        isPaid = false;
+                    }
+
+                    Bill bill = new Bill(billID, customerID, roomTypeID, isPaid, totalPrice, reservationID, roomServiceID);
+                    billList.Add(bill);
+                }
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show("Error constructing Bill List. Please try again. \n\n" + e.ToString());
+            } finally
+            {
+                reader.Close();
+            }
+
+            //Displays customers in listBox
             int listSize = billList.Count();
             RoomService roomService = new RoomService();
             int roomServiceListSize = roomServiceList.Count();
@@ -474,6 +598,7 @@ namespace HotelBookingSystem
             }
         }
 
+        //NOT NEEDED??
         //Builds the credit card object list.
         private void creditCardListBuilder()
         {
@@ -495,18 +620,43 @@ namespace HotelBookingSystem
             //}
         }
 
+        //WORKING
         //Builds the employee object list.
         private void employeeListBuilder()
         {
             //Clears existing list, if needed.
             employeeList.Clear();
 
-            //Get connection to DB, and executes queries
+            MySqlCommand command = new MySqlCommand("SELECT * from EMPLOYEE", dbUtil.Connection);
+            MySqlDataReader reader = command.ExecuteReader();
 
-            //Fills the employee objects, and adds to list.
-            //DEBUG
-            createFakeEmployees();
+            //Uses existing DB connection. Fills the customer objects, and adds to list.
+            try
+            {
+                while (reader.Read())
+                {
+                    int employeeID = reader.GetInt32(0);
+                    String firstName = reader.GetString(1);
+                    String lastName = reader.GetString(2);
+                    String streetAddress = reader.GetString(3);
+                    String city = reader.GetString(4);
+                    String province = reader.GetString(5);
+                    String postalCode = reader.GetString(6);
+                    String title = reader.GetString(7);
 
+                    Employee employee = new Employee(employeeID, firstName, lastName, streetAddress, city, province, postalCode, title);
+                    employeeList.Add(employee);
+                }
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show("Error constructing Employee List. Please try again. \n\n" + e.ToString());
+            } finally
+            {
+                reader.Close();
+            }
+
+            //Displays Employees in listBox
             int listSize = employeeList.Count();
 
             for (int x = 0; x < listSize; x++)
@@ -516,17 +666,40 @@ namespace HotelBookingSystem
             }
         }
 
+        //WORKING
         //Builds the room service object list.
         private void roomServiceListBuilder()
         {
             //Clears existing list, if needed.
             roomServiceList.Clear();
 
-            //Get connection to DB, and executes queries
+            MySqlCommand command = new MySqlCommand("SELECT * from ROOMSERVICE", dbUtil.Connection);
+            MySqlDataReader reader = command.ExecuteReader();
 
-            //Fills the room service objects, and adds to list.
-            //DEBUG
-            createFakeRoomServices();
+            //Uses existing DB connection. Fills the customer objects, and adds to list.
+            try
+            {
+                while (reader.Read())
+                {
+                    int roomServiceID = reader.GetInt32(0);
+                    String itemOrdered = reader.GetString(1);
+                    int customerID = reader.GetInt32(2);
+                    int roomNumber = reader.GetInt32(3);
+                    String specialInstructions = reader.GetString(4);
+                    double totalPrice = reader.GetDouble(5);
+                    DateTime timeOrderedFor = reader.GetDateTime(6);
+
+                    RoomService roomService = new RoomService(roomServiceID, itemOrdered, customerID, roomNumber, specialInstructions, totalPrice, timeOrderedFor);
+                    roomServiceList.Add(roomService);
+                }
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show("Error constructing Room Service List. Please try again. \n\n" + e.ToString());
+            } finally
+            {
+                reader.Close();
+            }
 
             int listSize = roomServiceList.Count();
 
@@ -537,65 +710,51 @@ namespace HotelBookingSystem
             }
         }
 
+        //WORKING
+        //Builds the check in/check out lists. Bases each list on if the resrvation is currently checked in
+        private void checkInListBuilder()
+        {
+            //Clears existing lists, if needed.
+            checkedInReservationList.Clear();
+            checkedOutReservationList.Clear();
+
+            int resListSize = reservationList.Count();
+
+            //Parses the reservation list, and sorts the reservations to the correct checkIn list, depending on
+            //boolean status.
+            for (int x = 0; x < resListSize; x++)
+            {
+                if (reservationList[x].IsCheckedIn == true)
+                {
+                    checkedInReservationList.Add(reservationList[x]);
+                } else
+                {
+                    checkedOutReservationList.Add(reservationList[x]);
+                }
+            }
+
+            int checkInListSize = checkedInReservationList.Count();
+            int checkOutListSize = checkedOutReservationList.Count();
+
+            //Builds checked in list (goes to the check out tab)
+            for (int x = 0; x < checkInListSize; x++)
+            {
+                String displayString = ("Reservation " + checkedInReservationList[x].ReservationID.ToString());
+                listBox2.Items.Add(displayString);
+            }
+
+            //Builds checked out list (goes to the check in tab)
+            for (int x = 0; x < checkOutListSize; x++)
+            {
+                String displayString = ("Reservation " + checkedOutReservationList[x].ReservationID.ToString());
+                listBox1.Items.Add(displayString);
+            }
+        }
+
 
         //---------------------------DEBUG---------------------------\\
 
         //Fills the object lists with some placeholders until the DB is ready
-
-        private void createFakeRooms()
-        {
-            Room fakeRoom1 = new Room(262, 0, 2);
-            Room fakeRoom2 = new Room(616, 1, 6);
-            Room fakeRoom3 = new Room(716, 2, 7);
-            Room fakeRoom4 = new Room(157, 0, 1);
-            Room fakeRoom5 = new Room(733, 1, 7);
-            Room fakeRoom6 = new Room(826, 2, 8);
-            Room fakeRoom7 = new Room(166, 0, 1);
-            Room fakeRoom8 = new Room(377, 1, 3);
-
-            roomList.Add(fakeRoom1);
-            roomList.Add(fakeRoom2);
-            roomList.Add(fakeRoom3);
-            roomList.Add(fakeRoom4);
-            roomList.Add(fakeRoom5);
-            roomList.Add(fakeRoom6);
-            roomList.Add(fakeRoom7);
-            roomList.Add(fakeRoom8);
-        }
-
-        private void createFakeCustomers()
-        {
-            Customer fakeCustomer1 = new Customer(001, "Behn", "McIlwaine", "36 Beasley Ave.", "Charlottetown", "PEI", "C1A 5Z3");
-            Customer fakeCustomer2 = new Customer(002, "Testy", "Testerson", "30 Morley Ave.", "Toronto", "ON", "C1A 2J4");
-            Customer fakeCustomer3 = new Customer(003, "Michelle", "Testerson", "322 West Eastnorth St.", "Charlottetown", "PEI", "C1A 5Z3");
-
-            customerList.Add(fakeCustomer1);
-            customerList.Add(fakeCustomer2);
-            customerList.Add(fakeCustomer3);
-        }
-
-        private void createFakeReservations()
-        {
-            Reservation fakeReservation1 = new Reservation(001, 001, "262", new DateTime(2015, 4, 10), new DateTime(2015, 4, 12));
-            Reservation fakeReservation2 = new Reservation(002, 001, "716", new DateTime(2015, 5, 14), new DateTime(2015, 5, 15));
-            Reservation fakeReservation3 = new Reservation(003, 001, "377", new DateTime(2015, 6, 05), new DateTime(2015, 6, 09));
-
-            reservationList.Add(fakeReservation1);
-            reservationList.Add(fakeReservation2);
-            reservationList.Add(fakeReservation3);
-        }
-
-        private void createFakeBills()
-        {
-            Bill fakeBill1 = new Bill(1, 1, 1, true, 100.00, 001, 001);
-            Bill fakeBill2 = new Bill(2, 2, 2, false, 85.23, 002);
-            Bill fakeBill3 = new Bill(3, 3, 3, false, 141.36, 003, 002);
-
-            billList.Add(fakeBill1);
-            billList.Add(fakeBill2);
-            billList.Add(fakeBill3);
-        }
-
         public void createFakeCreditCards()
         {
             CreditCard fakeCard1 = new CreditCard("1234123412341234", "1", "123", "09/17", "Behn McIlwaine", "Visa");
@@ -605,28 +764,6 @@ namespace HotelBookingSystem
             creditCardList.Add(fakeCard1);
             creditCardList.Add(fakeCard2);
             creditCardList.Add(fakeCard3);
-        }
-
-        public void createFakeEmployees()
-        {
-            Employee fakeEmployee1 = new Employee(001, "Adminny", "Adminnerson", "36 Beasley Ave.", "Charlottetown", "PEI", "C1A 5Z3", "Admin");
-            Employee fakeEmployee2 = new Employee(001, "John", "Smith", "38 Beasley Ave.", "Charlottetown", "PEI", "C1A 5Z3", "User");
-            Employee fakeEmployee3 = new Employee(001, "Greyson", "Nootenboom", "34 Beasley Ave.", "Charlottetown", "PEI", "C1A 5Z3", "User");
-
-            employeeList.Add(fakeEmployee1);
-            employeeList.Add(fakeEmployee2);
-            employeeList.Add(fakeEmployee3);
-        }
-
-        public void createFakeRoomServices()
-        {
-            RoomService fakeRoomService1 = new RoomService(1, "French Fries", 001, 322, "Extra salty", 5.99, new DateTime(2015, 5, 14));
-            RoomService fakeRoomService2 = new RoomService(2, "Hamburger", 002, 527, "Only ketchup", 8.99, new DateTime(2015, 5, 20));
-            RoomService fakeRoomService3 = new RoomService(3, "Massage", 003, 422, "", 59.99, new DateTime(2015, 7, 11));
-
-            roomServiceList.Add(fakeRoomService1);
-            roomServiceList.Add(fakeRoomService2);
-            roomServiceList.Add(fakeRoomService3);
         }
     }
 }

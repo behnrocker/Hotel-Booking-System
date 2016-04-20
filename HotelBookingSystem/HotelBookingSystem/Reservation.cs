@@ -13,10 +13,11 @@ namespace HotelBookingSystem
         private DateTime checkInDate;
         private DateTime checkOutDate;
         private int roomNumber;
+        private Boolean isCheckedIn;
 
         public Reservation()
         {
-
+            IsCheckedIn = false;
         }
 
         public Reservation(int cust, int res, String room, DateTime checkin, DateTime checkout)
@@ -30,6 +31,16 @@ namespace HotelBookingSystem
             checkInDate = checkin;
             checkOutDate = checkout;
             roomNumber = roomInt;
+        }
+
+        public Reservation(int cust, int res, int room, DateTime checkin, DateTime checkout, Boolean checkedIn)
+        {
+            customerID = cust;
+            reservationID = res;
+            checkInDate = checkin;
+            checkOutDate = checkout;
+            roomNumber = room;
+            isCheckedIn = checkedIn;
         }
 
         public int ReservationID
@@ -94,6 +105,19 @@ namespace HotelBookingSystem
             set
             {
                 roomNumber = value;
+            }
+        }
+
+        public bool IsCheckedIn
+        {
+            get
+            {
+                return isCheckedIn;
+            }
+
+            set
+            {
+                isCheckedIn = value;
             }
         }
     }
