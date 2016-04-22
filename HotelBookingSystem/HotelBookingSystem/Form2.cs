@@ -1,4 +1,10 @@
-﻿using MySql.Data.MySqlClient;
+﻿//Name: Behn McIlwaine, Marco Saad, Manon Miron
+//Date: April 22, 2016
+//Class: CIS-2261
+//Final Project: Hotel Booking System
+//Notes: The form to create new reservations
+
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -95,7 +101,12 @@ namespace HotelBookingSystem
                         }
                         finally
                         {
+                            MessageBox.Show("Successfully created.");
+
+                            ((Form1)Application.OpenForms["Form1"]).updateAllLists();
+
                             dbUtil.Close();
+                            this.Close();
                         }
                     }
                     else if (dialogResult == DialogResult.No)

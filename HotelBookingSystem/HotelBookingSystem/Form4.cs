@@ -1,4 +1,10 @@
-﻿using System;
+﻿//Name: Behn McIlwaine, Marco Saad, Manon Miron
+//Date: April 22, 2016
+//Class: CIS-2261
+//Final Project: Hotel Booking System
+//Notes: The form to view/edit customers
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +18,9 @@ namespace HotelBookingSystem
 {
     public partial class Form4 : Form
     {
+        Customer loadedCustomer;
+        DBUtil dbUtil = new DBUtil();
+
         public Form4()
         {
             InitializeComponent();
@@ -48,9 +57,31 @@ namespace HotelBookingSystem
         //Save button
         private void button1_Click(object sender, EventArgs e)
         {
-            //Saves fields as variables.
+            try
+            {
+                dbUtil.Open();
 
+                //Creating customer for upload.
+                Customer customer = new Customer(loadedCustomer.CustomerID, textBox1.Text, textBox2.Text, textBox3.Text, textBox4.Text, textBox5.Text, textBox6.Text);
+
+                dbUtil.UpdateCustomer(customer);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                MessageBox.Show("Successfully updated.");
+
+                //Refreshes the lists in the original form.
+                ((Form1)Application.OpenForms["Form1"]).updateAllLists();
+
+                dbUtil.Close();
+                this.Close();
+            }         
             //Updates record in database.
+
 
             //Disables fields, and re-enables edit button
             button1.Enabled = false;
@@ -78,6 +109,7 @@ namespace HotelBookingSystem
             textBox4.Text = cust.City;
             textBox5.Text = cust.Province;
             textBox6.Text = cust.PostalCode;
+            loadedCustomer = cust;
         }
 
         //Used to pass credit card object to this form.

@@ -1,4 +1,11 @@
-﻿using System;
+﻿//Name: Behn McIlwaine, Marco Saad, Manon Miron
+//Date: April 22, 2016
+//Class: CIS-2261
+//Final Project: Hotel Booking System
+//Notes: This is the class where most of the database interactions are handled. Major functions (like 
+//       Opening, Writing, and Updating) are in here.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

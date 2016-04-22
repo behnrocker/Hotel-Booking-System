@@ -108,6 +108,7 @@
             this.listBox7 = new System.Windows.Forms.ListBox();
             this.listBox6 = new System.Windows.Forms.ListBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.button7 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -638,7 +639,7 @@
             // 
             // button14
             // 
-            this.button14.Location = new System.Drawing.Point(366, 344);
+            this.button14.Location = new System.Drawing.Point(350, 343);
             this.button14.Name = "button14";
             this.button14.Size = new System.Drawing.Size(75, 23);
             this.button14.TabIndex = 8;
@@ -648,7 +649,7 @@
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(228, 344);
+            this.button9.Location = new System.Drawing.Point(228, 343);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(75, 23);
             this.button9.TabIndex = 7;
@@ -685,6 +686,7 @@
             // 
             // textBox18
             // 
+            this.textBox18.Enabled = false;
             this.textBox18.Location = new System.Drawing.Point(521, 303);
             this.textBox18.Name = "textBox18";
             this.textBox18.Size = new System.Drawing.Size(100, 20);
@@ -692,6 +694,7 @@
             // 
             // textBox17
             // 
+            this.textBox17.Enabled = false;
             this.textBox17.Location = new System.Drawing.Point(289, 303);
             this.textBox17.Name = "textBox17";
             this.textBox17.Size = new System.Drawing.Size(136, 20);
@@ -699,6 +702,7 @@
             // 
             // textBox16
             // 
+            this.textBox16.Enabled = false;
             this.textBox16.Location = new System.Drawing.Point(98, 303);
             this.textBox16.Name = "textBox16";
             this.textBox16.Size = new System.Drawing.Size(100, 20);
@@ -711,9 +715,11 @@
             this.listBox5.Name = "listBox5";
             this.listBox5.Size = new System.Drawing.Size(626, 277);
             this.listBox5.TabIndex = 0;
+            this.listBox5.SelectedIndexChanged += new System.EventHandler(this.listBox5_SelectedIndexChanged);
             // 
             // tabPage7
             // 
+            this.tabPage7.Controls.Add(this.button7);
             this.tabPage7.Controls.Add(this.button17);
             this.tabPage7.Controls.Add(this.button16);
             this.tabPage7.Controls.Add(this.listBox8);
@@ -727,7 +733,7 @@
             // 
             // button17
             // 
-            this.button17.Location = new System.Drawing.Point(368, 310);
+            this.button17.Location = new System.Drawing.Point(289, 311);
             this.button17.Name = "button17";
             this.button17.Size = new System.Drawing.Size(75, 23);
             this.button17.TabIndex = 2;
@@ -737,7 +743,7 @@
             // 
             // button16
             // 
-            this.button16.Location = new System.Drawing.Point(218, 310);
+            this.button16.Location = new System.Drawing.Point(178, 311);
             this.button16.Name = "button16";
             this.button16.Size = new System.Drawing.Size(75, 23);
             this.button16.TabIndex = 1;
@@ -894,6 +900,16 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(402, 311);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(75, 23);
+            this.button7.TabIndex = 3;
+            this.button7.Text = "Create New";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1002,6 +1018,7 @@
         private System.Windows.Forms.TextBox textBox22;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.TextBox textBox21;
+        private System.Windows.Forms.Button button7;
     }
 }
 

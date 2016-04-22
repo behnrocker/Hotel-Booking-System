@@ -1,4 +1,10 @@
-﻿using System;
+﻿//Name: Behn McIlwaine, Marco Saad, Manon Miron
+//Date: April 22, 2016
+//Class: CIS-2261
+//Final Project: Hotel Booking System
+//Notes: The form to create new rooms
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -89,7 +95,13 @@ namespace HotelBookingSystem
                 }
                 finally
                 {
+                    MessageBox.Show("Room successfully created.");
+
+                    //Refreshes the lists in the original form.
+                    ((Form1)Application.OpenForms["Form1"]).updateAllLists();
+
                     dbUtil.Close();
+                    this.Close();
                 }
             }
         }

@@ -1,4 +1,15 @@
-﻿using System;
+﻿//Name: Behn McIlwaine, Marco Saad, Manon Miron
+//Date: April 22, 2016
+//Class: CIS-2261
+//Final Project: Hotel Booking System
+//Notes: The main form used in the booking system. Reads from database initially, and writes all tables to object lists.
+//       Once in lists, the objects are then displayed in varius listBox objects thoughout the tabs. Some functions can
+//       be performed within this Form, while other functions will call a different form to appear. After all database
+//       updates of any sort, all lists are re-built, and all listBox objects are re-filled.
+//
+//       Calendar filtering unfortunately isn't working in all tabs it is present.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -42,7 +53,6 @@ namespace HotelBookingSystem
                 customerListBuilder();
                 reservationListBuilder();
                 roomListBuilder();
-                creditCardListBuilder(); 
                 employeeListBuilder();
                 checkInListBuilder();
                 roomServiceListBuilder();
@@ -253,11 +263,36 @@ namespace HotelBookingSystem
 
         }
 
-        //NOT WORKING
+        //WORKING
         //View button
         private void button6_Click(object sender, EventArgs e)
         {
-            //Opens another window with information about the reservation.
+            int selectedIndex = listBox3.SelectedIndex;
+
+            if(selectedIndex < 0)
+            {
+                MessageBox.Show("Please make a selection");
+            } else
+            {
+                //Opens another window with information about the reservation.
+                Form9 reservationInfoForm = new Form9();
+                reservationInfoForm.loadReservation(reservationList[selectedIndex]);
+                Customer customer = null;
+
+                int customerID = reservationList[selectedIndex].CustomerID;
+                int customerListSize = customerList.Count();
+
+                for(int x = 0; x < customerListSize; x++)
+                {
+                    if(customerList[x].CustomerID == customerID)
+                    {
+                        customer = customerList[x];
+                    }
+                }
+
+                reservationInfoForm.loadCustomer(customer);
+                reservationInfoForm.Show();
+            }
         }
 
         //---------------------------ROOM SERVICE TAB---------------------------\\
@@ -397,6 +432,17 @@ namespace HotelBookingSystem
             }
         }
 
+        //WORKING
+        //When list index is changed, the text fields update with information about the customer.
+        private void listBox5_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int selectedIndex = listBox5.SelectedIndex;
+
+            textBox16.Text = customerList[selectedIndex].FirstName;
+            textBox17.Text = customerList[selectedIndex].LastName;
+            textBox18.Text = customerList[selectedIndex].CustomerID.ToString();
+        }
+
         //---------------------------BILLS TAB---------------------------\\
 
         //WORKING
@@ -507,6 +553,14 @@ namespace HotelBookingSystem
                 paymentForm.loadRoomService(roomServiceToLoad);
                 paymentForm.Show();
             }
+        }
+
+        //IN PROGRESS
+        //Create New Button
+        private void button7_Click(object sender, EventArgs e)
+        {
+            //Form10 newBillForm = new Form10();
+            //newBillForm.Show();
         }
 
         //---------------------------REPORTS TAB---------------------------\\
@@ -887,28 +941,6 @@ namespace HotelBookingSystem
             }
         }
 
-        //NOT NEEDED??
-        //Builds the credit card object list.
-        private void creditCardListBuilder()
-        {
-            //Clears existing list, if needed.
-            creditCardList.Clear();
-
-            //Get connection to DB, and executes queries
-
-            //Fills the credit card objects, and adds to list.
-            //DEBUG
-            //createFakeCreditCards();
-
-            //int listSize = creditCardList.Count();
-
-            //for (int x = 0; x < listSize; x++)
-            //{
-            //    String displayString = (creditCardList[x].NameOnCard);
-            //    listBox6.Items.Add(displayString);
-            //}
-        }
-
         //WORKING
         //Builds the employee object list.
         private void employeeListBuilder()
@@ -1045,5 +1077,400 @@ namespace HotelBookingSystem
             }
         }
 
+
+        //---------------------------LIST UPDATERS---------------------------\\
+
+        //WORKING
+        //Builds the customer object list.
+        public void customerListUpdater()
+        {
+            //Clears existing list, to make sure all data is up to date in the list.
+            customerList.Clear();
+            listBox5.Items.Clear();
+
+            dbUtil = new DBUtil();
+            dbUtil.Open();
+
+            MySqlCommand command = new MySqlCommand("SELECT * from CUSTOMER", dbUtil.Connection);
+            MySqlDataReader reader = command.ExecuteReader();
+
+            //Uses existing DB connection. Fills the customer objects, and adds to list.
+            try
+            {
+                while (reader.Read())
+                {
+                    int customerID = reader.GetInt32(0);
+                    String firstName = reader.GetString(1);
+                    String lastName = reader.GetString(2);
+                    String streetAddress = reader.GetString(3);
+                    String city = reader.GetString(4);
+                    String province = reader.GetString(5);
+                    String postalCode = reader.GetString(6);
+
+                    Customer customer = new Customer(customerID, firstName, lastName, streetAddress, city, province, postalCode);
+                    customerList.Add(customer);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error constructing Customer List. Please try again. \n\n" + e.ToString());
+            }
+            finally
+            {
+                reader.Close();
+                dbUtil.Close();
+            }
+
+            //Displays customers in listBox
+            int listSize = customerList.Count();
+
+            for (int x = 0; x < listSize; x++)
+            {
+                String displayString = (customerList[x].FirstName + " " + customerList[x].LastName);
+                listBox5.Items.Add(displayString);
+            }
+        }
+
+        //WORKING
+        //Builds the reservation object list.
+        public void reservationListUpdater()
+        {
+            //Clears existing list, if needed.
+            reservationList.Clear();
+            listBox3.Items.Clear();
+
+            dbUtil = new DBUtil();
+            dbUtil.Open();
+
+            MySqlCommand command = new MySqlCommand("SELECT * from RESERVATION", dbUtil.Connection);
+            MySqlDataReader reader = command.ExecuteReader();
+
+            //Uses existing DB connection. Fills the customer objects, and adds to list.
+            try
+            {
+                while (reader.Read())
+                {
+                    int reservationID = reader.GetInt32(0);
+                    int customerID = reader.GetInt32(1);
+                    DateTime checkInDate = reader.GetDateTime(2);
+                    DateTime checkOutDate = reader.GetDateTime(3);
+                    int roomNumber = reader.GetInt32(4);
+                    String checkedInString = reader.GetString(5);
+                    Boolean checkedIn = true;
+
+                    if (checkedInString == "0")
+                    {
+                        checkedIn = false;
+                    }
+
+                    Reservation reservation = new Reservation(customerID, reservationID, roomNumber, checkInDate, checkOutDate, checkedIn);
+                    reservationList.Add(reservation);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error constructing Reservation List. Please try again. \n\n" + e.ToString());
+            }
+            finally
+            {
+                reader.Close();
+                dbUtil.Close();
+            }
+
+            //Displays reservations in listBox.
+            int listSize = reservationList.Count();
+
+            for (int x = 0; x < listSize; x++)
+            {
+                String displayString = ("Reservation " + reservationList[x].ReservationID + " - Customer " + reservationList[x].CustomerID);
+                listBox3.Items.Add(displayString);
+            }
+        }
+
+        //WORKING
+        //Builds the room object list.
+        private void roomListUpdater()
+        {
+            //Clears existing list, if needed.
+            roomList.Clear();
+            listBox7.Items.Clear();
+
+            dbUtil = new DBUtil();
+            dbUtil.Open();
+
+            MySqlCommand command = new MySqlCommand("SELECT * from ROOM", dbUtil.Connection);
+            MySqlDataReader reader = command.ExecuteReader();
+
+            //Uses existing DB connection. Fills the customer objects, and adds to list.
+            try
+            {
+                while (reader.Read())
+                {
+                    int roomNumber = reader.GetInt32(0);
+                    int roomTypeID = reader.GetInt32(1);
+                    int roomFloor = reader.GetInt32(2);
+
+                    Room room = new Room(roomNumber, roomTypeID, roomFloor);
+                    roomList.Add(room);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error constructing Room List. Please try again. \n\n" + e.ToString());
+            }
+            finally
+            {
+                reader.Close();
+                dbUtil.Close();
+            }
+
+            int listSize = roomList.Count();
+
+            for (int x = 0; x < listSize; x++)
+            {
+                String displayString = ("Room " + roomList[x].RoomNumber.ToString());
+                listBox7.Items.Add(displayString);
+            }
+        }
+
+        //WORKING
+        //Builds the bill object list.
+        private void billListUpdater()
+        {
+            //Clears existing list, to make sure all data is up to date in the list.
+            billList.Clear();
+            listBox8.Items.Clear();
+
+            dbUtil = new DBUtil();
+            dbUtil.Open();
+
+            MySqlCommand command = new MySqlCommand("SELECT * from BILL", dbUtil.Connection);
+            MySqlDataReader reader = command.ExecuteReader();
+
+            //Uses existing DB connection. Fills the customer objects, and adds to list.
+            try
+            {
+                while (reader.Read())
+                {
+                    int billID = reader.GetInt32(0);
+                    int customerID = reader.GetInt32(1);
+                    int roomTypeID = reader.GetInt32(2);
+                    Boolean isPaid = true;
+                    String isPaidString = reader.GetString(3);
+                    double totalPrice = reader.GetDouble(4);
+                    int reservationID = reader.GetInt32(5);
+                    int roomServiceID = reader.GetInt32(6);
+
+                    //Figures out boolean
+                    if (isPaidString == "0")
+                    {
+                        isPaid = false;
+                    }
+
+                    Bill bill = new Bill(billID, customerID, roomTypeID, isPaid, totalPrice, reservationID, roomServiceID);
+                    billList.Add(bill);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error constructing Bill List. Please try again. \n\n" + e.ToString());
+            }
+            finally
+            {
+                reader.Close();
+                dbUtil.Close();
+            }
+
+            //Displays customers in listBox
+            int listSize = billList.Count();
+            RoomService roomService = new RoomService();
+            int roomServiceListSize = roomServiceList.Count();
+            double roomServiceCost;
+            double roomCost;
+
+            for (int x = 0; x < listSize; x++)
+            {
+                //Sets room service ID to current bill's room service ID.
+                int roomServiceID = billList[x].RoomServiceID;
+                roomServiceCost = 0.00;
+                roomCost = 0.00;
+
+                if (roomServiceID != 0)
+                {
+                    for (int y = 0; y < roomServiceListSize; y++)
+                    {
+                        if (roomServiceList[y].RoomServiceID == roomServiceID)
+                        {
+                            roomService = roomServiceList[y];
+                        }
+                    }
+
+                    roomServiceCost = roomService.TotalPrice;
+                }
+
+                roomCost = billList[x].TotalPrice;
+                double finalPrice = (roomCost + roomServiceCost);
+                String displayString = (billList[x].BillID + " - $" + finalPrice);
+                listBox8.Items.Add(displayString);
+            }
+        }
+
+        //WORKING
+        //Builds the employee object list.
+        private void employeeListUpdater()
+        {
+            //Clears existing list, if needed.
+            employeeList.Clear();
+            listBox6.Items.Clear();
+
+            dbUtil = new DBUtil();
+            dbUtil.Open();
+
+            MySqlCommand command = new MySqlCommand("SELECT * from EMPLOYEE", dbUtil.Connection);
+            MySqlDataReader reader = command.ExecuteReader();
+
+            //Uses existing DB connection. Fills the customer objects, and adds to list.
+            try
+            {
+                while (reader.Read())
+                {
+                    int employeeID = reader.GetInt32(0);
+                    String firstName = reader.GetString(1);
+                    String lastName = reader.GetString(2);
+                    String streetAddress = reader.GetString(3);
+                    String city = reader.GetString(4);
+                    String province = reader.GetString(5);
+                    String postalCode = reader.GetString(6);
+                    String title = reader.GetString(7);
+
+                    Employee employee = new Employee(employeeID, firstName, lastName, streetAddress, city, province, postalCode, title);
+                    employeeList.Add(employee);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error constructing Employee List. Please try again. \n\n" + e.ToString());
+            }
+            finally
+            {
+                reader.Close();
+                dbUtil.Close();
+            }
+
+            //Displays Employees in listBox
+            int listSize = employeeList.Count();
+
+            for (int x = 0; x < listSize; x++)
+            {
+                String displayString = (employeeList[x].FirstName + " " + employeeList[x].LastName);
+                listBox6.Items.Add(displayString);
+            }
+        }
+
+        //WORKING
+        //Builds the room service object list.
+        private void roomServiceListUpdater()
+        {
+            //Clears existing list, if needed.
+            roomServiceList.Clear();
+            listBox4.Items.Clear();
+
+            dbUtil = new DBUtil();
+            dbUtil.Open();
+
+            MySqlCommand command = new MySqlCommand("SELECT * from ROOMSERVICE", dbUtil.Connection);
+            MySqlDataReader reader = command.ExecuteReader();
+
+            //Uses existing DB connection. Fills the customer objects, and adds to list.
+            try
+            {
+                while (reader.Read())
+                {
+                    int roomServiceID = reader.GetInt32(0);
+                    String itemOrdered = reader.GetString(1);
+                    int customerID = reader.GetInt32(2);
+                    int roomNumber = reader.GetInt32(3);
+                    String specialInstructions = reader.GetString(4);
+                    double totalPrice = reader.GetDouble(5);
+                    DateTime timeOrderedFor = reader.GetDateTime(6);
+
+                    RoomService roomService = new RoomService(roomServiceID, itemOrdered, customerID, roomNumber, specialInstructions, totalPrice, timeOrderedFor);
+                    roomServiceList.Add(roomService);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error constructing Room Service List. Please try again. \n\n" + e.ToString());
+            }
+            finally
+            {
+                reader.Close();
+                dbUtil.Close();
+            }
+
+            //Displays the customer list in the room service tab. Only shows currently checked in customers.
+            int listSize = checkedInReservationList.Count();
+
+            for (int x = 0; x < listSize; x++)
+            {
+                String displayString = (customerList[x].FirstName + " " + customerList[x].LastName);
+                listBox4.Items.Add(displayString);
+            }
+        }
+
+        //WORKING
+        //Builds the check in/check out lists. Bases each list on if the resrvation is currently checked in
+        private void checkInListUpdater()
+        {
+            //Clears existing lists, if needed.
+            checkedInReservationList.Clear();
+            checkedOutReservationList.Clear();
+            listBox1.Items.Clear();
+            listBox2.Items.Clear();
+
+            int resListSize = reservationList.Count();
+
+            //Parses the reservation list, and sorts the reservations to the correct checkIn list, depending on
+            //boolean status.
+            for (int x = 0; x < resListSize; x++)
+            {
+                if (reservationList[x].IsCheckedIn == true)
+                {
+                    checkedInReservationList.Add(reservationList[x]);
+                }
+                else
+                {
+                    checkedOutReservationList.Add(reservationList[x]);
+                }
+            }
+
+            int checkInListSize = checkedInReservationList.Count();
+            int checkOutListSize = checkedOutReservationList.Count();
+
+            //Builds checked in list (goes to the check out tab)
+            for (int x = 0; x < checkInListSize; x++)
+            {
+                String displayString = ("Reservation " + checkedInReservationList[x].ReservationID.ToString());
+                listBox2.Items.Add(displayString);
+            }
+
+            //Builds checked out list (goes to the check in tab)
+            for (int x = 0; x < checkOutListSize; x++)
+            {
+                String displayString = ("Reservation " + checkedOutReservationList[x].ReservationID.ToString());
+                listBox1.Items.Add(displayString);
+            }
+        }
+
+        public void updateAllLists()
+        {
+            customerListUpdater();
+            reservationListUpdater();
+            roomListUpdater();
+            employeeListUpdater();
+            checkInListUpdater();
+            roomServiceListUpdater();
+            billListUpdater();
+        }
     }
 }

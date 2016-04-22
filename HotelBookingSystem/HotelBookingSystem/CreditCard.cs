@@ -1,4 +1,10 @@
-﻿using System;
+﻿//Name: Behn McIlwaine, Marco Saad, Manon Miron
+//Date: April 22, 2016
+//Class: CIS-2261
+//Final Project: Hotel Booking System
+//Notes: The class for the Credit Card object. 
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
