@@ -65,7 +65,6 @@
             this.monthCalendar3 = new System.Windows.Forms.MonthCalendar();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.button8 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
             this.textBox15 = new System.Windows.Forms.TextBox();
             this.textBox14 = new System.Windows.Forms.TextBox();
             this.textBox13 = new System.Windows.Forms.TextBox();
@@ -97,6 +96,11 @@
             this.listBox8 = new System.Windows.Forms.ListBox();
             this.tabPage8 = new System.Windows.Forms.TabPage();
             this.tabPage9 = new System.Windows.Forms.TabPage();
+            this.button18 = new System.Windows.Forms.Button();
+            this.label25 = new System.Windows.Forms.Label();
+            this.textBox22 = new System.Windows.Forms.TextBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.textBox21 = new System.Windows.Forms.TextBox();
             this.button13 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.button11 = new System.Windows.Forms.Button();
@@ -104,11 +108,6 @@
             this.listBox7 = new System.Windows.Forms.ListBox();
             this.listBox6 = new System.Windows.Forms.ListBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.textBox21 = new System.Windows.Forms.TextBox();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
-            this.textBox22 = new System.Windows.Forms.TextBox();
-            this.button18 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -192,6 +191,7 @@
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(281, 277);
             this.listBox1.TabIndex = 10;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // button2
             // 
@@ -251,6 +251,7 @@
             // 
             // textBox4
             // 
+            this.textBox4.Enabled = false;
             this.textBox4.Location = new System.Drawing.Point(418, 117);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(200, 20);
@@ -258,6 +259,7 @@
             // 
             // textBox3
             // 
+            this.textBox3.Enabled = false;
             this.textBox3.Location = new System.Drawing.Point(418, 91);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(200, 20);
@@ -265,6 +267,7 @@
             // 
             // textBox2
             // 
+            this.textBox2.Enabled = false;
             this.textBox2.Location = new System.Drawing.Point(418, 65);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(200, 20);
@@ -272,6 +275,7 @@
             // 
             // textBox1
             // 
+            this.textBox1.Enabled = false;
             this.textBox1.Location = new System.Drawing.Point(418, 39);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(200, 20);
@@ -312,6 +316,7 @@
             this.listBox2.Name = "listBox2";
             this.listBox2.Size = new System.Drawing.Size(281, 277);
             this.listBox2.TabIndex = 22;
+            this.listBox2.SelectedIndexChanged += new System.EventHandler(this.listBox2_SelectedIndexChanged);
             // 
             // button3
             // 
@@ -371,6 +376,7 @@
             // 
             // textBox5
             // 
+            this.textBox5.Enabled = false;
             this.textBox5.Location = new System.Drawing.Point(419, 118);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(200, 20);
@@ -378,6 +384,7 @@
             // 
             // textBox6
             // 
+            this.textBox6.Enabled = false;
             this.textBox6.Location = new System.Drawing.Point(419, 92);
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(200, 20);
@@ -385,6 +392,7 @@
             // 
             // textBox7
             // 
+            this.textBox7.Enabled = false;
             this.textBox7.Location = new System.Drawing.Point(419, 66);
             this.textBox7.Name = "textBox7";
             this.textBox7.Size = new System.Drawing.Size(200, 20);
@@ -392,6 +400,7 @@
             // 
             // textBox8
             // 
+            this.textBox8.Enabled = false;
             this.textBox8.Location = new System.Drawing.Point(419, 40);
             this.textBox8.Name = "textBox8";
             this.textBox8.Size = new System.Drawing.Size(200, 20);
@@ -449,7 +458,6 @@
             // tabPage5
             // 
             this.tabPage5.Controls.Add(this.button8);
-            this.tabPage5.Controls.Add(this.button7);
             this.tabPage5.Controls.Add(this.textBox15);
             this.tabPage5.Controls.Add(this.textBox14);
             this.tabPage5.Controls.Add(this.textBox13);
@@ -483,16 +491,6 @@
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(119, 340);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(75, 23);
-            this.button7.TabIndex = 15;
-            this.button7.Text = "Filter";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
-            // 
             // textBox15
             // 
             this.textBox15.Location = new System.Drawing.Point(418, 113);
@@ -503,6 +501,7 @@
             // 
             // textBox14
             // 
+            this.textBox14.Enabled = false;
             this.textBox14.Location = new System.Drawing.Point(418, 87);
             this.textBox14.Name = "textBox14";
             this.textBox14.Size = new System.Drawing.Size(189, 20);
@@ -518,11 +517,11 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(381, 90);
+            this.label15.Location = new System.Drawing.Point(341, 90);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(31, 13);
+            this.label15.Size = new System.Drawing.Size(71, 13);
             this.label15.TabIndex = 11;
-            this.label15.Text = "Total";
+            this.label15.Text = "Time Ordered";
             // 
             // label14
             // 
@@ -587,6 +586,7 @@
             // 
             // textBox11
             // 
+            this.textBox11.Enabled = false;
             this.textBox11.Location = new System.Drawing.Point(108, 314);
             this.textBox11.Name = "textBox11";
             this.textBox11.Size = new System.Drawing.Size(151, 20);
@@ -594,6 +594,7 @@
             // 
             // textBox10
             // 
+            this.textBox10.Enabled = false;
             this.textBox10.Location = new System.Drawing.Point(108, 288);
             this.textBox10.Name = "textBox10";
             this.textBox10.Size = new System.Drawing.Size(151, 20);
@@ -601,6 +602,7 @@
             // 
             // textBox9
             // 
+            this.textBox9.Enabled = false;
             this.textBox9.Location = new System.Drawing.Point(108, 262);
             this.textBox9.Name = "textBox9";
             this.textBox9.Size = new System.Drawing.Size(151, 20);
@@ -613,6 +615,7 @@
             this.listBox4.Name = "listBox4";
             this.listBox4.Size = new System.Drawing.Size(257, 225);
             this.listBox4.TabIndex = 0;
+            this.listBox4.SelectedIndexChanged += new System.EventHandler(this.listBox4_SelectedIndexChanged);
             // 
             // tabPage6
             // 
@@ -781,6 +784,49 @@
             this.tabPage9.Text = "Admin";
             this.tabPage9.UseVisualStyleBackColor = true;
             // 
+            // button18
+            // 
+            this.button18.Location = new System.Drawing.Point(496, 21);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(75, 23);
+            this.button18.TabIndex = 10;
+            this.button18.Text = "Login";
+            this.button18.UseVisualStyleBackColor = true;
+            this.button18.Click += new System.EventHandler(this.button18_Click);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(274, 26);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(53, 13);
+            this.label25.TabIndex = 9;
+            this.label25.Text = "Password";
+            // 
+            // textBox22
+            // 
+            this.textBox22.Location = new System.Drawing.Point(333, 23);
+            this.textBox22.Name = "textBox22";
+            this.textBox22.PasswordChar = '*';
+            this.textBox22.Size = new System.Drawing.Size(132, 20);
+            this.textBox22.TabIndex = 8;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(50, 26);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(55, 13);
+            this.label24.TabIndex = 7;
+            this.label24.Text = "Username";
+            // 
+            // textBox21
+            // 
+            this.textBox21.Location = new System.Drawing.Point(111, 23);
+            this.textBox21.Name = "textBox21";
+            this.textBox21.Size = new System.Drawing.Size(132, 20);
+            this.textBox21.TabIndex = 6;
+            // 
             // button13
             // 
             this.button13.Enabled = false;
@@ -847,49 +893,6 @@
             // 
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
-            // 
-            // textBox21
-            // 
-            this.textBox21.Location = new System.Drawing.Point(111, 23);
-            this.textBox21.Name = "textBox21";
-            this.textBox21.Size = new System.Drawing.Size(132, 20);
-            this.textBox21.TabIndex = 6;
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(50, 26);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(55, 13);
-            this.label24.TabIndex = 7;
-            this.label24.Text = "Username";
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(274, 26);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(53, 13);
-            this.label25.TabIndex = 9;
-            this.label25.Text = "Password";
-            // 
-            // textBox22
-            // 
-            this.textBox22.Location = new System.Drawing.Point(333, 23);
-            this.textBox22.Name = "textBox22";
-            this.textBox22.PasswordChar = '*';
-            this.textBox22.Size = new System.Drawing.Size(132, 20);
-            this.textBox22.TabIndex = 8;
-            // 
-            // button18
-            // 
-            this.button18.Location = new System.Drawing.Point(496, 21);
-            this.button18.Name = "button18";
-            this.button18.Size = new System.Drawing.Size(75, 23);
-            this.button18.TabIndex = 10;
-            this.button18.Text = "Login";
-            this.button18.UseVisualStyleBackColor = true;
-            this.button18.Click += new System.EventHandler(this.button18_Click);
             // 
             // Form1
             // 
@@ -959,7 +962,6 @@
         private System.Windows.Forms.ListBox listBox3;
         private System.Windows.Forms.MonthCalendar monthCalendar3;
         private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button7;
         private System.Windows.Forms.TextBox textBox15;
         private System.Windows.Forms.TextBox textBox14;
         private System.Windows.Forms.TextBox textBox13;

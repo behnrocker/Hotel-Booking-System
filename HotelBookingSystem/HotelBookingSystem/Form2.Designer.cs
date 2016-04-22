@@ -215,6 +215,7 @@
             // 
             // textBox9
             // 
+            this.textBox9.Enabled = false;
             this.textBox9.Location = new System.Drawing.Point(108, 296);
             this.textBox9.Name = "textBox9";
             this.textBox9.Size = new System.Drawing.Size(127, 20);
@@ -250,6 +251,7 @@
             // 
             // textBox10
             // 
+            this.textBox10.Enabled = false;
             this.textBox10.Location = new System.Drawing.Point(108, 322);
             this.textBox10.Name = "textBox10";
             this.textBox10.Size = new System.Drawing.Size(127, 20);
@@ -268,11 +270,12 @@
             // 
             // comboBox1
             // 
+            this.comboBox1.Enabled = false;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
-            "Standard Room",
+            "Conference Room",
             "Luxury Suite",
-            "Conference Room"});
+            "Standard Room"});
             this.comboBox1.Location = new System.Drawing.Point(108, 244);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(127, 21);

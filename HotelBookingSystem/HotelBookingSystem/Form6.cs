@@ -42,7 +42,7 @@ namespace HotelBookingSystem
             String expiration = textBox5.Text;
             String totalPrice = textBox4.Text;
 
-            PaymentProcessor paymentProcessor = new PaymentProcessor(passedBill.BillID, passedBill.TotalPrice, cardNumber, Int32.Parse(csvNumber), nameOnCard, cardType);
+            PaymentProcessor paymentProcessor = new PaymentProcessor(passedBill, passedBill.BillID, passedBill.TotalPrice, cardNumber, Int32.Parse(csvNumber), nameOnCard, cardType);
 
             if (paymentProcessor.WasSuccessful)
             {

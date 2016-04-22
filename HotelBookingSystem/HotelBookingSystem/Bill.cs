@@ -12,13 +12,15 @@ namespace HotelBookingSystem
         private int customerID;
         private int roomTypeID;
         private Boolean isPaid;
+        private int isPaidInt;
         private double totalPrice;
         private int reservationID;
         private int roomServiceID;
 
         public Bill()
         {
-
+            isPaid = false;
+            isPaidInt = 0;
         }
 
         //For when there is no room service ID
@@ -31,6 +33,14 @@ namespace HotelBookingSystem
             totalPrice = price;
             reservationID = resID;
             roomServiceID = 0;
+
+            if (isPaid)
+            {
+                isPaidInt = 1;
+            } else
+            {
+                isPaidInt = 0;
+            }
         }
 
         //For when there is a room service ID
@@ -94,6 +104,15 @@ namespace HotelBookingSystem
             set
             {
                 isPaid = value;
+
+                if (value)
+                {
+                    isPaidInt = 1;
+                }
+                else
+                {
+                    isPaidInt = 0;
+                }
             }
         }
 
@@ -133,6 +152,19 @@ namespace HotelBookingSystem
             set
             {
                 roomServiceID = value;
+            }
+        }
+
+        public int IsPaidInt
+        {
+            get
+            {
+                return isPaidInt;
+            }
+
+            set
+            {
+                isPaidInt = value;
             }
         }
     }

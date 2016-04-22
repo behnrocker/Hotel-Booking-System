@@ -25,18 +25,7 @@ namespace HotelBookingSystem
         //Save button
         private void button1_Click(object sender, EventArgs e)
         {
-            //Validate form. Credit card is optional.
-            //Customer must be filled out.
-            //If not all fieldz are filled out for Credit Card, error is thrown.
-            //Expiry must be in correct format
-            //Numbers only for CC.
-            //3 numbers only for CSV
-            //ComboBox must not be default.
-
-            //Figure out next Customer ID. Convert to String
-
-            //DEBUG
-            String customerID = "9";
+            DBUtil dbUtil = new DBUtil();
 
             //Setting Customer variables from the text fields.
             String firstName = textBox1.Text;
@@ -46,17 +35,55 @@ namespace HotelBookingSystem
             String province = textBox5.Text;
             String postalCode = textBox6.Text;
 
-            String cardType = comboBox1.Text;
-            String cardholderName = textBox7.Text;
-            String cardNumber = textBox8.Text;
-            String csv = textBox9.Text;
-            String expiry = textBox10.Text;
+            if (firstName == "" || lastName == "" || streetAddress == "" || city == "" || province == "" || postalCode == "")
+            {
+                MessageBox.Show("Please fill out all required fields.");
+            }
+            else
+            {
+                try
+                {
+                    dbUtil.Open();
+
+                    //Gets new Customer ID
+                    int customerID = dbUtil.GetNewCustomerID();
+
+                    //Creates object
+                    Customer customer = new Customer(customerID, firstName, lastName, streetAddress, city, province, postalCode);
+
+                    //Writes to DB
+                    dbUtil.insertCustomer(customer);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+                finally
+                {
+                    dbUtil.Close();
+                }
+            }
+            
+            
+            //Validate form. Credit card is optional.
+            //Customer must be filled out.
+            //If not all fields are filled out for Credit Card, error is thrown.
+            //Expiry must be in correct format
+            //Numbers only for CC.
+            //3 numbers only for CSV
+            //ComboBox must not be default.
+
+            //Figure out next Customer ID.
+
+            //String cardType = comboBox1.Text;
+            //String cardholderName = textBox7.Text;
+            //String cardNumber = textBox8.Text;
+            //String csv = textBox9.Text;
+            //String expiry = textBox10.Text;
 
 
 
-            //Creating Customer and Credit Card objects
-            CreditCard creditCard = new CreditCard(cardNumber, customerID, csv, expiry, cardholderName, cardType);
-
+            //Creating Customer object
         }
 
         //Clear button.

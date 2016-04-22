@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace HotelBookingSystem
 {
@@ -16,6 +17,8 @@ namespace HotelBookingSystem
         private String nameOnCard;
         private String cardType;
         private Boolean wasSuccessful;
+        DBUtil dbUtil = new DBUtil();
+        Bill passedBill = new Bill();
 
         public PaymentProcessor()
         {
@@ -25,6 +28,17 @@ namespace HotelBookingSystem
         public PaymentProcessor(int bill, double price, String cNumber, int csv, String name, String type)
         {
             billID = bill;
+            totalPrice = price;
+            cardNumber = cNumber;
+            csvNumber = csv;
+            nameOnCard = name;
+            cardType = type;
+        }
+
+        public PaymentProcessor(Bill bill, int bllID, double price, String cNumber, int csv, String name, String type)
+        {
+            passedBill = bill;
+            billID = bllID;
             totalPrice = price;
             cardNumber = cNumber;
             csvNumber = csv;
@@ -145,11 +159,30 @@ namespace HotelBookingSystem
                 //Charge card. Wait for response to make sure payment clears.
                 //Receive response. If payment clears, bill is marked as paid. If not, error is thrown.
 
+
+
                 //Mark bill paid in DB.
+                try
+                {
+                    //Opens connection
+                    dbUtil.Open();
 
-                //Mark successful in class
-                WasSuccessful = true;
+                    passedBill.IsPaid = true;
 
+                    //Creates object
+                    dbUtil.UpdateBill(passedBill);
+
+                    //Mark successful in class
+                    WasSuccessful = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+                finally
+                {
+                    dbUtil.Close();
+                }
             }
             else
             {
@@ -163,5 +196,12 @@ namespace HotelBookingSystem
 
         }
 
-}
+        //Loads bill from previous form
+        internal void loadBill(Bill bill)
+        {
+            //Sets object, and fills textBox with price.
+            passedBill = bill;
+        }
+
+    }
 }

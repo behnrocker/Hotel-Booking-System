@@ -8,108 +8,8 @@ using MySql.Data;
 using MySql.Data.MySqlClient;
 
 
-namespace DatabaseUtility
+namespace HotelBookingSystem
 {
-    class Employee
-    {
-        public int employeeID;
-        public String firstName;
-        public String lastName;
-        public String streetAddress;
-        public String city;
-        public String province;
-        public String postalCode;
-        public String title;
-    }
-
-    class Customer
-    {
-        public int customerID;
-        public String firstName;
-        public String lastName;
-        public String streetAddress;
-        public String city;
-        public String province;
-        public String postalCode;
-    }
-
-    class Reservation
-    {
-        public int reservationID;
-        public int customerID;
-        public DateTime checkInDate;
-        public DateTime checkOutDate;
-        public int roomNumber;
-    }
-
-    class Room
-    {
-        public int roomNumber;
-        public int roomTypeID;
-        public int roomFloor;
-    }
-
-    class SingleRoom : Room
-    {
-
-        public String bedSize;
-        public int numberOfBeds;
-        public Boolean isAvailable;
-        public String specialItems;
-        public int maxCapacity;
-        public double billAmount;
-    }
-
-    class Suite : Room
-    {
-        public String bedSize;
-        public int numberOfBeds;
-        public Boolean isAvailable;
-        public String specialItems;
-        public int maxCapacity;
-        public double billAmount;
-    }
-
-    class ConferenceRoom : Room
-    {
-        public Boolean isAvailable;
-        public String specialItems;
-        public int maxCapacity;
-        public double billAmount;
-        public int numberOfChair;
-        public Boolean soundSystemRequired;
-    }
-
-    class Bill
-    {
-        public int billID;
-        public int customerID;
-        public double billAmount;
-        public int roomTypeID;
-        public Boolean isPaid;
-    }
-
-    class RoomService
-    {
-        public int roomServiceID;
-        public String itemOrdered;
-        public int customerID;
-        public int roomNumber;
-        public String specialInstructions;
-        public double totalPrice;
-        public DateTime timeOrderedFor;
-    }
-
-    class CreditCard
-    {
-        public int cardNumber;
-        public int customerID;
-        public int csvNumber;
-        public DateTime expiryDate;
-        public String nameOnCard;
-        public String cardType;
-    }
-
     class DBUtil
     {
         public DBUtil()
@@ -152,15 +52,15 @@ namespace DatabaseUtility
         public void InsertEmployee(Employee e)
         {
             MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "INSERT INTO Employee (employeeID, firstName,lastName,streetAddress,city,province,postalCode,title) VALUES (?employeeID ?firstName,?lastName,?streetAddress,?city,?province,?postalCode, ?title)";
-            command.Parameters.AddWithValue("?employeeID", e.employeeID);
-            command.Parameters.AddWithValue("?firstName", e.firstName);
-            command.Parameters.AddWithValue("?lastName", e.lastName);
-            command.Parameters.AddWithValue("?streetAddress", e.streetAddress);
-            command.Parameters.AddWithValue("?city", e.city);
-            command.Parameters.AddWithValue("?province", e.province);
-            command.Parameters.AddWithValue("?postalCode", e.postalCode);
-            command.Parameters.AddWithValue("?title", e.title);
+            command.CommandText = "INSERT INTO Employee (employeeID,firstName,lastName,streetAddress,city,province,postalCode,title) VALUES (?employeeID,?firstName,?lastName,?streetAddress,?city,?province,?postalCode,?title)";
+            command.Parameters.AddWithValue("?employeeID", e.EmployeeID);
+            command.Parameters.AddWithValue("?firstName", e.FirstName);
+            command.Parameters.AddWithValue("?lastName", e.LastName);
+            command.Parameters.AddWithValue("?streetAddress", e.StreetAddress);
+            command.Parameters.AddWithValue("?city", e.City);
+            command.Parameters.AddWithValue("?province", e.Province);
+            command.Parameters.AddWithValue("?postalCode", e.PostalCode);
+            command.Parameters.AddWithValue("?title", e.Title);
             command.ExecuteNonQuery();
         }
 
@@ -176,6 +76,8 @@ namespace DatabaseUtility
                 result = reader.GetInt32(0) + 1;
             }
 
+            reader.Close();
+
             return result;
         }
 
@@ -189,14 +91,14 @@ namespace DatabaseUtility
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                e.employeeID = reader.GetInt32(0);
-                e.firstName = reader.GetString(1);
-                e.lastName = reader.GetString(2);
-                e.streetAddress = reader.GetString(3);
-                e.city = reader.GetString(4);
-                e.province = reader.GetString(5);
-                e.postalCode = reader.GetString(6);
-                e.title = reader.GetString(7);
+                e.EmployeeID = reader.GetInt32(0);
+                e.FirstName = reader.GetString(1);
+                e.LastName = reader.GetString(2);
+                e.StreetAddress = reader.GetString(3);
+                e.City = reader.GetString(4);
+                e.Province = reader.GetString(5);
+                e.PostalCode = reader.GetString(6);
+                e.Title = reader.GetString(7);
             }
 
             return e;
@@ -205,37 +107,36 @@ namespace DatabaseUtility
         public void UpdateEmployee(Employee e)
         {
             MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "UPDATE Employee SET firstName = ?firstName,lastName = ?lastName,streetAddress = ?streetAddress,city=?city,province=?province,postalCode=?postalCode,title=?title WHERE employeeID=?employeeID";
-            command.Parameters.AddWithValue("?employeeID", e.employeeID);
-            command.Parameters.AddWithValue("?firstName", e.firstName);
-            command.Parameters.AddWithValue("?lastName", e.lastName);
-            command.Parameters.AddWithValue("?streetAddress", e.streetAddress);
-            command.Parameters.AddWithValue("?city", e.city);
-            command.Parameters.AddWithValue("?province", e.province);
-            command.Parameters.AddWithValue("?postalCode", e.postalCode);
-            command.Parameters.AddWithValue("?title", e.title);
+            command.Parameters.AddWithValue("?employeeID", e.EmployeeID);
+            command.Parameters.AddWithValue("?firstName", e.FirstName);
+            command.Parameters.AddWithValue("?lastName", e.LastName);
+            command.Parameters.AddWithValue("?streetAddress", e.StreetAddress);
+            command.Parameters.AddWithValue("?city", e.City);
+            command.Parameters.AddWithValue("?province", e.Province);
+            command.Parameters.AddWithValue("?postalCode", e.PostalCode);
+            command.Parameters.AddWithValue("?title", e.Title);
             command.ExecuteNonQuery();
         }
 
         public void DeleteEmployee(Employee e)
         {
             MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "DELETE Employee WHERE employeeID=?employeeID";
-            command.Parameters.AddWithValue("?employeeID", e.employeeID);
+            command.CommandText = "DELETE FROM EMPLOYEE WHERE employeeID=?employeeID";
+            command.Parameters.AddWithValue("?employeeID", e.EmployeeID);
             command.ExecuteNonQuery();
         }
 
         public void insertCustomer(Customer c)
         {
             MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "INSERT INTO Customer (customerID, firstName,lastName,streetAddress,city,province,postalCode) VALUES (?customerID ?firstName,?lastName,?streetAddress,?city,?province,?postalCode)";
-            command.Parameters.AddWithValue("?customerID", c.customerID);
-            command.Parameters.AddWithValue("?firstName", c.firstName);
-            command.Parameters.AddWithValue("?lastName", c.lastName);
-            command.Parameters.AddWithValue("?streetAddress", c.streetAddress);
-            command.Parameters.AddWithValue("?city", c.city);
-            command.Parameters.AddWithValue("?province", c.province);
-            command.Parameters.AddWithValue("?postalCode", c.postalCode);
+            command.CommandText = "INSERT INTO Customer (customerID,firstName,lastName,streetAddress,city,province,postalCode) VALUES (?customerID,?firstName,?lastName,?streetAddress,?city,?province,?postalCode)";
+            command.Parameters.AddWithValue("?customerID", c.CustomerID);
+            command.Parameters.AddWithValue("?firstName", c.FirstName);
+            command.Parameters.AddWithValue("?lastName", c.LastName);
+            command.Parameters.AddWithValue("?streetAddress", c.StreetAddress);
+            command.Parameters.AddWithValue("?city", c.City);
+            command.Parameters.AddWithValue("?province", c.Province);
+            command.Parameters.AddWithValue("?postalCode", c.PostalCode);
             command.ExecuteNonQuery();
 
         }
@@ -252,6 +153,8 @@ namespace DatabaseUtility
                 result = reader.GetInt32(0) + 1;
             }
 
+            reader.Close();
+
             return result;
         }
 
@@ -265,13 +168,13 @@ namespace DatabaseUtility
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                c.customerID = reader.GetInt32(0);
-                c.firstName = reader.GetString(1);
-                c.lastName = reader.GetString(2);
-                c.streetAddress = reader.GetString(3);
-                c.city = reader.GetString(4);
-                c.province = reader.GetString(5);
-                c.postalCode = reader.GetString(6);
+                c.CustomerID = reader.GetInt32(0);
+                c.FirstName = reader.GetString(1);
+                c.LastName = reader.GetString(2);
+                c.StreetAddress = reader.GetString(3);
+                c.City = reader.GetString(4);
+                c.Province = reader.GetString(5);
+                c.PostalCode = reader.GetString(6);
 
             }
 
@@ -282,13 +185,13 @@ namespace DatabaseUtility
         {
             MySqlCommand command = connection.CreateCommand();
             command.CommandText = "UPDATE Customer SET firstName = ?firstName,lastName = ?lastName,streetAddress = ?streetAddress,city=?city,province=?province,postalCode=?postalCode WHERE customerID=?customerID";
-            command.Parameters.AddWithValue("?customerID", c.customerID);
-            command.Parameters.AddWithValue("?firstName", c.firstName);
-            command.Parameters.AddWithValue("?lastName", c.lastName);
-            command.Parameters.AddWithValue("?streetAddress", c.streetAddress);
-            command.Parameters.AddWithValue("?city", c.city);
-            command.Parameters.AddWithValue("?province", c.province);
-            command.Parameters.AddWithValue("?postalCode", c.postalCode);
+            command.Parameters.AddWithValue("?customerID", c.CustomerID);
+            command.Parameters.AddWithValue("?firstName", c.FirstName);
+            command.Parameters.AddWithValue("?lastName", c.LastName);
+            command.Parameters.AddWithValue("?streetAddress", c.StreetAddress);
+            command.Parameters.AddWithValue("?city", c.City);
+            command.Parameters.AddWithValue("?province", c.Province);
+            command.Parameters.AddWithValue("?postalCode", c.PostalCode);
             command.ExecuteNonQuery();
         }
 
@@ -296,19 +199,20 @@ namespace DatabaseUtility
         {
             MySqlCommand command = connection.CreateCommand();
             command.CommandText = "DELETE Customer WHERE customerID=?customerID";
-            command.Parameters.AddWithValue("?customerID", c.customerID);
+            command.Parameters.AddWithValue("?customerID", c.CustomerID);
             command.ExecuteNonQuery();
         }
 
         public void insertReservation(Reservation r)
         {
             MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "INSERT INTO Reservation (reservationID, customerID, checkInDate, checkOutDate, roomNumber) VALUES (?reservationID, ?customerID, ?checkInDate, ?checkOutDate, ?roomNumber)";
-            command.Parameters.AddWithValue("?reservationID", r.reservationID);
-            command.Parameters.AddWithValue("?customerID", r.customerID);
-            command.Parameters.AddWithValue("?checkInDate", r.checkInDate);
-            command.Parameters.AddWithValue("?checkOutDate", r.checkOutDate);
-            command.Parameters.AddWithValue("?roomNumber", r.roomNumber);
+            command.CommandText = "INSERT INTO Reservation (reservationID, customerID, checkInDate, checkOutDate, roomNumber, checkedIn) VALUES (?reservationID, ?customerID, ?checkInDate, ?checkOutDate, ?roomNumber, ?isCheckedIn)";
+            command.Parameters.AddWithValue("?reservationID", r.ReservationID);
+            command.Parameters.AddWithValue("?customerID", r.CustomerID);
+            command.Parameters.AddWithValue("?checkInDate", r.CheckInDate);
+            command.Parameters.AddWithValue("?checkOutDate", r.CheckOutDate);
+            command.Parameters.AddWithValue("?roomNumber", r.RoomNumber);
+            command.Parameters.AddWithValue("?isCheckedIn", r.IsCheckedInInt);
 
             command.ExecuteNonQuery();
 
@@ -326,6 +230,8 @@ namespace DatabaseUtility
                 result = reader.GetInt32(0) + 1;
             }
 
+            reader.Close();
+
             return result;
         }
 
@@ -339,11 +245,11 @@ namespace DatabaseUtility
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                r.reservationID = reader.GetInt32(0);
-                r.customerID = reader.GetInt32(1);
-                r.checkInDate = reader.GetDateTime(2);
-                r.checkOutDate = reader.GetDateTime(3);
-                r.roomNumber = reader.GetInt32(4);
+                r.ReservationID = reader.GetInt32(0);
+                r.CustomerID = reader.GetInt32(1);
+                r.CheckInDate = reader.GetDateTime(2);
+                r.CheckOutDate = reader.GetDateTime(3);
+                r.RoomNumber = reader.GetInt32(4);
 
 
             }
@@ -354,11 +260,13 @@ namespace DatabaseUtility
         public void UpdateReservation(Reservation r)
         {
             MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "UPDATE Reservation SET customerID = ?customerID, checkInDate = ?checkInDate, checkOutDate = ?checkOutDate, roomNumber = ?roomNumber WHERE reservationID=?reservationID";
-            command.Parameters.AddWithValue("?customerID", r.customerID);
-            command.Parameters.AddWithValue("?checkInDate", r.checkInDate);
-            command.Parameters.AddWithValue("?checkOutDate", r.checkOutDate);
-            command.Parameters.AddWithValue("?roomNumber", r.roomNumber);
+            command.CommandText = "UPDATE Reservation SET customerID = ?customerID, checkInDate = ?checkInDate, checkOutDate = ?checkOutDate, roomNumber = ?roomNumber, checkedIn = ?isCheckedIn WHERE reservationID=?reservationID";
+            command.Parameters.AddWithValue("?reservationID", r.ReservationID);
+            command.Parameters.AddWithValue("?customerID", r.CustomerID);
+            command.Parameters.AddWithValue("?checkInDate", r.CheckInDate);
+            command.Parameters.AddWithValue("?checkOutDate", r.CheckOutDate);
+            command.Parameters.AddWithValue("?roomNumber", r.RoomNumber);
+            command.Parameters.AddWithValue("?isCheckedIn", r.IsCheckedInInt);
 
             command.ExecuteNonQuery();
         }
@@ -367,7 +275,7 @@ namespace DatabaseUtility
         {
             MySqlCommand command = connection.CreateCommand();
             command.CommandText = "DELETE Reservation WHERE reservationID=?reservationID";
-            command.Parameters.AddWithValue("?reservationID", r.reservationID);
+            command.Parameters.AddWithValue("?reservationID", r.ReservationID);
             command.ExecuteNonQuery();
         }
 
@@ -382,6 +290,8 @@ namespace DatabaseUtility
             {
                 result = reader.GetInt32(0) + 1;
             }
+
+            reader.Close();
 
             return result;
         }
@@ -401,350 +311,368 @@ namespace DatabaseUtility
             return result;
         }
 
-        public void InsertSingleRoom(SingleRoom sr)
-        {
-            sr.roomTypeID = GetNewRoomTypeID();
-
-            MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "INSERT INTO RoomType (roomTypeID, bedSize, numberOfBeds, availability, specialItems, billAmount, maxCapacity, type) VALUES (?roomTypeID, ?bedSize, ?numberOfBeds, ?availability, ?specialItems, ?billAmount, ?maxCapacity, ?type)";
-            command.Parameters.AddWithValue("?roomTypeID", sr.roomTypeID);
-            command.Parameters.AddWithValue("?bedSize", sr.bedSize);
-            command.Parameters.AddWithValue("?numberOfBeds", sr.numberOfBeds);
-            if (sr.isAvailable == true)
-            {
-                command.Parameters.AddWithValue("?availability", "T");
-            }
-            else
-            {
-                command.Parameters.AddWithValue("?availability", "F");
-            }
-            command.Parameters.AddWithValue("?specialItems", sr.specialItems);
-            command.Parameters.AddWithValue("?billAmount", Convert.ToInt32(sr.billAmount * 100));
-            command.Parameters.AddWithValue("?maxCapacity", sr.maxCapacity);
-            command.Parameters.AddWithValue("?type", "SingleRoom");
-
-            command.ExecuteNonQuery();
-
-            MySqlCommand command2 = connection.CreateCommand();
-            command2.CommandText = "INSERT INTO Room (roomNumber,roomTypeID,roomFloor) VALUES (?roomNumber,?roomTypeID,?roomFloor)";
-            command2.Parameters.AddWithValue("?roomNumber", sr.roomNumber);
-            command2.Parameters.AddWithValue("?roomTypeID", sr.roomTypeID);
-            command2.Parameters.AddWithValue("?roomFloor", sr.roomFloor);
-
-            command2.ExecuteNonQuery();
-
-        }
-
-        public void DeleteSingleRoom(SingleRoom sr)
+        public void InsertRoom(Room rm)
         {
             MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "DELETE Room WHERE roomNumber = ?roomNumber";
-            command.Parameters.AddWithValue("?roomNumber", sr.roomNumber);
-            command.ExecuteNonQuery();
-
-            MySqlCommand command2 = connection.CreateCommand();
-            command.CommandText = "DELETE RoomType WHERE roomTypeID = ?roomTypeID";
-            command.Parameters.AddWithValue("?roomTypeID", sr.roomTypeID);
+            command.CommandText = "INSERT INTO Room (roomNumber,roomTypeID,roomFloor) VALUES (?roomNumber,?roomTypeID,?roomFloor)";
+            command.Parameters.AddWithValue("?roomNumber", rm.RoomNumber);
+            command.Parameters.AddWithValue("?roomTypeID", rm.RoomTypeID);
+            command.Parameters.AddWithValue("?roomFloor", rm.RoomFloor);
             command.ExecuteNonQuery();
         }
 
-        public void UpdateSingleRoom(SingleRoom sr)
+        //public void InsertSingleRoom(SingleRoom sr)
+        //{
+        //    sr.roomTypeID = GetNewRoomTypeID();
+
+        //    MySqlCommand command = connection.CreateCommand();
+        //    command.CommandText = "INSERT INTO RoomType (roomTypeID, bedSize, numberOfBeds, availability, specialItems, billAmount, maxCapacity, type) VALUES (?roomTypeID, ?bedSize, ?numberOfBeds, ?availability, ?specialItems, ?billAmount, ?maxCapacity, ?type)";
+        //    command.Parameters.AddWithValue("?roomTypeID", sr.roomTypeID);
+        //    command.Parameters.AddWithValue("?bedSize", sr.bedSize);
+        //    command.Parameters.AddWithValue("?numberOfBeds", sr.numberOfBeds);
+        //    if (sr.isAvailable == true)
+        //    {
+        //        command.Parameters.AddWithValue("?availability", "T");
+        //    }
+        //    else
+        //    {
+        //        command.Parameters.AddWithValue("?availability", "F");
+        //    }
+        //    command.Parameters.AddWithValue("?specialItems", sr.specialItems);
+        //    command.Parameters.AddWithValue("?billAmount", Convert.ToInt32(sr.billAmount * 100));
+        //    command.Parameters.AddWithValue("?maxCapacity", sr.maxCapacity);
+        //    command.Parameters.AddWithValue("?type", "SingleRoom");
+
+        //    command.ExecuteNonQuery();
+
+        //    MySqlCommand command2 = connection.CreateCommand();
+        //    command2.CommandText = "INSERT INTO Room (roomNumber,roomTypeID,roomFloor) VALUES (?roomNumber,?roomTypeID,?roomFloor)";
+        //    command2.Parameters.AddWithValue("?roomNumber", sr.roomNumber);
+        //    command2.Parameters.AddWithValue("?roomTypeID", sr.roomTypeID);
+        //    command2.Parameters.AddWithValue("?roomFloor", sr.roomFloor);
+
+        //    command2.ExecuteNonQuery();
+
+        //}
+
+        //public void DeleteSingleRoom(SingleRoom sr)
+        //{
+        //    MySqlCommand command = connection.CreateCommand();
+        //    command.CommandText = "DELETE Room WHERE roomNumber = ?roomNumber";
+        //    command.Parameters.AddWithValue("?roomNumber", sr.roomNumber);
+        //    command.ExecuteNonQuery();
+
+        //    MySqlCommand command2 = connection.CreateCommand();
+        //    command.CommandText = "DELETE RoomType WHERE roomTypeID = ?roomTypeID";
+        //    command.Parameters.AddWithValue("?roomTypeID", sr.roomTypeID);
+        //    command.ExecuteNonQuery();
+        //}
+
+        //public void UpdateSingleRoom(SingleRoom sr)
+        //{
+        //    MySqlCommand command = connection.CreateCommand();
+        //    command.CommandText = "UPDATE Room SET roomTypeID = ?roomTypeID, roomFloor = ?roomFloor WHERE roomNumber = ?roomNumber";
+        //    command.Parameters.AddWithValue("?roomTypeID", sr.roomTypeID);
+        //    command.Parameters.AddWithValue("?roomFloor", sr.roomFloor);
+        //    command.Parameters.AddWithValue("?roomNumber", sr.roomNumber);
+        //    command.ExecuteNonQuery();
+
+        //    MySqlCommand command2 = connection.CreateCommand();
+        //    command2.CommandText = "UPDATE RoomType SET bedSize = ?bedSize, numberOfBeds = ?numberOfBeds, availability = ?availability, specialItems = ?specialItems, billAmount = ?billAmount, maxCapacity = ?maxCapacity, type = ?type WHERE roomTypeID = ?roomTypeID";
+        //    command2.Parameters.AddWithValue("?bedSize", sr.bedSize);
+        //    command2.Parameters.AddWithValue("?numberOfBeds", sr.numberOfBeds);
+        //    if (sr.isAvailable == true)
+        //    {
+        //        command2.Parameters.AddWithValue("?availability", "T");
+        //    }
+        //    else
+        //    {
+        //        command2.Parameters.AddWithValue("?availability", "F");
+        //    }
+        //    command2.Parameters.AddWithValue("?specialItems", sr.specialItems);
+        //    command2.Parameters.AddWithValue("?billAmount", Convert.ToInt32(sr.billAmount * 100));
+        //    command2.Parameters.AddWithValue("?maxCapacity", sr.maxCapacity);
+        //    command2.Parameters.AddWithValue("?type", "SingleRoom");
+        //    command2.Parameters.AddWithValue("?roomTypeID", sr.roomTypeID);
+        //    command.ExecuteNonQuery();
+        //}
+
+        //public void InsertSuite(Suite s)
+        //{
+        //    s.roomTypeID = GetNewRoomTypeID();
+
+        //    MySqlCommand command = connection.CreateCommand();
+        //    command.CommandText = "INSERT INTO RoomType (roomTypeID, bedSize, numberOfBeds, availability, specialItems, billAmount, maxCapacity, type) VALUES (?roomTypeID, ?bedSize, ?numberOfBeds, ?availability, ?specialItems, ?billAmount, ?maxCapacity, ?type)";
+        //    command.Parameters.AddWithValue("?roomTypeID", s.roomTypeID);
+        //    command.Parameters.AddWithValue("?bedSize", s.bedSize);
+        //    command.Parameters.AddWithValue("?numberOfBeds", s.numberOfBeds);
+        //    if (s.isAvailable == true)
+        //    {
+        //        command.Parameters.AddWithValue("?availability", "T");
+        //    }
+        //    else
+        //    {
+        //        command.Parameters.AddWithValue("?availability", "F");
+        //    }
+        //    command.Parameters.AddWithValue("?specialItems", s.specialItems);
+        //    command.Parameters.AddWithValue("?billAmount", Convert.ToInt32(s.billAmount * 100));
+        //    command.Parameters.AddWithValue("?maxCapacity", s.maxCapacity);
+        //    command.Parameters.AddWithValue("?type", "Suite");
+
+        //    command.ExecuteNonQuery();
+
+        //    MySqlCommand command2 = connection.CreateCommand();
+        //    command2.CommandText = "INSERT INTO Room (roomNumber,roomTypeID,roomFloor) VALUES (?roomNumber,?roomTypeID,?roomFloor)";
+        //    command2.Parameters.AddWithValue("?roomNumber", s.roomNumber);
+        //    command2.Parameters.AddWithValue("?roomTypeID", s.roomTypeID);
+        //    command2.Parameters.AddWithValue("?roomFloor", s.roomFloor);
+
+        //    command2.ExecuteNonQuery();
+
+        //}
+
+        //public void DeleteSuite(Suite s)
+        //{
+        //    MySqlCommand command = connection.CreateCommand();
+        //    command.CommandText = "DELETE Room WHERE roomNumber = ?roomNumber";
+        //    command.Parameters.AddWithValue("?roomNumber", s.roomNumber);
+        //    command.ExecuteNonQuery();
+
+        //    MySqlCommand command2 = connection.CreateCommand();
+        //    command.CommandText = "DELETE RoomType WHERE roomTypeID = ?roomTypeID";
+        //    command.Parameters.AddWithValue("?roomTypeID", s.roomTypeID);
+        //    command.ExecuteNonQuery();
+        //}
+
+        //public void UpdateSuite(Suite s)
+        //{
+        //    MySqlCommand command = connection.CreateCommand();
+        //    command.CommandText = "UPDATE Room SET roomTypeID = ?roomTypeID, roomFloor = ?roomFloor WHERE roomNumber = ?roomNumber";
+        //    command.Parameters.AddWithValue("?roomTypeID", s.roomTypeID);
+        //    command.Parameters.AddWithValue("?roomFloor", s.roomFloor);
+        //    command.Parameters.AddWithValue("?roomNumber", s.roomNumber);
+        //    command.ExecuteNonQuery();
+
+        //    MySqlCommand command2 = connection.CreateCommand();
+        //    command2.CommandText = "UPDATE RoomType SET bedSize = ?bedSize, numberOfBeds = ?numberOfBeds, availability = ?availability, specialItems = ?specialItems, billAmount = ?billAmount, maxCapacity = ?maxCapacity, type = ?type WHERE roomTypeID = ?roomTypeID";
+        //    command2.Parameters.AddWithValue("?bedSize", s.bedSize);
+        //    command2.Parameters.AddWithValue("?numberOfBeds", s.numberOfBeds);
+        //    if (s.isAvailable == true)
+        //    {
+        //        command2.Parameters.AddWithValue("?availability", "T");
+        //    }
+        //    else
+        //    {
+        //        command2.Parameters.AddWithValue("?availability", "F");
+        //    }
+        //    command2.Parameters.AddWithValue("?specialItems", s.specialItems);
+        //    command2.Parameters.AddWithValue("?billAmount", Convert.ToInt32(s.billAmount * 100));
+        //    command2.Parameters.AddWithValue("?maxCapacity", s.maxCapacity);
+        //    command2.Parameters.AddWithValue("?type", "Suite");
+        //    command2.Parameters.AddWithValue("?roomTypeID", s.roomTypeID);
+        //    command.ExecuteNonQuery();
+        //}
+
+        //public void InsertConferenceRoom(ConferenceRoom cr)
+        //{
+        //    cr.roomTypeID = GetNewRoomTypeID();
+
+        //    MySqlCommand command = connection.CreateCommand();
+        //    command.CommandText = "INSERT INTO RoomType (roomTypeID, bedSize, numberOfBeds, availability, specialItems, billAmount, maxCapacity, type) VALUES (?roomTypeID, ?bedSize, ?numberOfBeds, ?availability, ?specialItems, ?billAmount, ?maxCapacity, ?type)";
+        //    command.Parameters.AddWithValue("?roomTypeID", cr.roomTypeID);
+        //    if (cr.soundSystemRequired)
+        //    {
+        //        command.Parameters.AddWithValue("?bedSize", "T");
+        //    }
+        //    else
+        //    {
+        //        command.Parameters.AddWithValue("?bedSize", "F");
+        //    }
+
+        //    command.Parameters.AddWithValue("?numberOfBeds", cr.numberOfChair);
+        //    if (cr.isAvailable == true)
+        //    {
+        //        command.Parameters.AddWithValue("?availability", "T");
+        //    }
+        //    else
+        //    {
+        //        command.Parameters.AddWithValue("?availability", "F");
+        //    }
+        //    command.Parameters.AddWithValue("?specialItems", cr.specialItems);
+        //    command.Parameters.AddWithValue("?billAmount", Convert.ToInt32(cr.billAmount * 100));
+        //    command.Parameters.AddWithValue("?maxCapacity", cr.maxCapacity);
+        //    command.Parameters.AddWithValue("?type", "ConferenceRoom");
+
+        //    command.ExecuteNonQuery();
+
+        //    MySqlCommand command2 = connection.CreateCommand();
+        //    command2.CommandText = "INSERT INTO Room (roomNumber,roomTypeID,roomFloor) VALUES (?roomNumber,?roomTypeID,?roomFloor)";
+        //    command2.Parameters.AddWithValue("?roomNumber", cr.roomNumber);
+        //    command2.Parameters.AddWithValue("?roomTypeID", cr.roomTypeID);
+        //    command2.Parameters.AddWithValue("?roomFloor", cr.roomFloor);
+
+        //    command2.ExecuteNonQuery();
+
+        //}
+
+        //public void DeleteConferenceRoom(ConferenceRoom cr)
+        //{
+        //    MySqlCommand command = connection.CreateCommand();
+        //    command.CommandText = "DELETE Room WHERE roomNumber = ?roomNumber";
+        //    command.Parameters.AddWithValue("?roomNumber", cr.roomNumber);
+        //    command.ExecuteNonQuery();
+
+        //    MySqlCommand command2 = connection.CreateCommand();
+        //    command.CommandText = "DELETE RoomType WHERE roomTypeID = ?roomTypeID";
+        //    command.Parameters.AddWithValue("?roomTypeID", cr.roomTypeID);
+        //    command.ExecuteNonQuery();
+        //}
+
+        //public void UpdateConferenceRoom(ConferenceRoom cr)
+        //{
+        //    MySqlCommand command = connection.CreateCommand();
+        //    command.CommandText = "UPDATE Room SET roomTypeID = ?roomTypeID, roomFloor = ?roomFloor WHERE roomNumber = ?roomNumber";
+        //    command.Parameters.AddWithValue("?roomTypeID", cr.roomTypeID);
+        //    command.Parameters.AddWithValue("?roomFloor", cr.roomFloor);
+        //    command.Parameters.AddWithValue("?roomNumber", cr.roomNumber);
+        //    command.ExecuteNonQuery();
+
+        //    MySqlCommand command2 = connection.CreateCommand();
+        //    command2.CommandText = "UPDATE RoomType SET bedSize = ?bedSize, numberOfBeds = ?numberOfBeds, availability = ?availability, specialItems = ?specialItems, billAmount = ?billAmount, maxCapacity = ?maxCapacity, type = ?type WHERE roomTypeID = ?roomTypeID";
+        //    if (cr.soundSystemRequired)
+        //    {
+        //        command2.Parameters.AddWithValue("?bedSize", "T");
+        //    }
+        //    else
+        //    {
+        //        command2.Parameters.AddWithValue("?bedSize", "F");
+        //    }
+
+        //    command2.Parameters.AddWithValue("?numberOfBeds", cr.numberOfChair);
+        //    if (cr.isAvailable == true)
+        //    {
+        //        command2.Parameters.AddWithValue("?availability", "T");
+        //    }
+        //    else
+        //    {
+        //        command2.Parameters.AddWithValue("?availability", "F");
+        //    }
+        //    command2.Parameters.AddWithValue("?specialItems", cr.specialItems);
+        //    command2.Parameters.AddWithValue("?billAmount", Convert.ToInt32(cr.billAmount * 100));
+        //    command2.Parameters.AddWithValue("?maxCapacity", cr.maxCapacity);
+        //    command2.Parameters.AddWithValue("?type", "ConferenceRoom");
+        //    command2.Parameters.AddWithValue("?roomTypeID", cr.roomTypeID);
+        //    command.ExecuteNonQuery();
+        //}
+
+
+        //public Room FindRoomByRoomNumber(int roomNumber)
+        //{
+
+
+        //    MySqlCommand command = connection.CreateCommand();
+        //    command.CommandText = "SELECT R.roomNumber, R.roomFloor, R.roomTypeID, RT.bedsize, RT.numberOfBeds, RT.availability, RT.specialItems, RT.billAmount, RT.maxCapacity, RT.type FROM Room AS R, RoomType AS RT WHERE R.roomNumber = ?roomNumber and R.roomTypeID = RT.roomTypeID";
+        //    command.Parameters.AddWithValue("?roomNumber", roomNumber);
+        //    MySqlDataReader reader = command.ExecuteReader();
+        //    while (reader.Read())
+        //    {
+        //        if (reader.GetString(9) == "SingleRoom")
+        //        {
+        //            SingleRoom r = new SingleRoom();
+
+        //            r.roomNumber = reader.GetInt32(0);
+        //            r.roomFloor = reader.GetInt32(1);
+        //            r.roomTypeID = reader.GetInt32(2);
+        //            r.bedSize = reader.GetString(3);
+        //            r.numberOfBeds = reader.GetInt32(4);
+        //            if (reader.GetString(5) == "T")
+        //            {
+        //                r.isAvailable = true;
+        //            }
+        //            else
+        //            {
+        //                r.isAvailable = false;
+        //            }
+        //            r.specialItems = reader.GetString(6);
+        //            r.billAmount = reader.GetInt32(7) / 100;
+        //            r.maxCapacity = reader.GetInt32(8);
+        //            return r;
+        //        }
+
+        //        if (reader.GetString(9) == "Suite")
+        //        {
+        //            Suite r = new Suite();
+
+        //            r.roomNumber = reader.GetInt32(0);
+        //            r.roomFloor = reader.GetInt32(1);
+        //            r.roomTypeID = reader.GetInt32(2);
+        //            r.bedSize = reader.GetString(3);
+        //            r.numberOfBeds = reader.GetInt32(4);
+        //            if (reader.GetString(5) == "T")
+        //            {
+        //                r.isAvailable = true;
+        //            }
+        //            else
+        //            {
+        //                r.isAvailable = false;
+        //            }
+        //            r.specialItems = reader.GetString(6);
+        //            r.billAmount = reader.GetInt32(7) / 100;
+        //            r.maxCapacity = reader.GetInt32(8);
+        //            return r;
+        //        }
+
+        //        if (reader.GetString(9) == "ConferenceRoom")
+        //        {
+        //            ConferenceRoom r = new ConferenceRoom();
+
+        //            r.roomNumber = reader.GetInt32(0);
+        //            r.roomFloor = reader.GetInt32(1);
+        //            r.roomTypeID = reader.GetInt32(2);
+        //            if (reader.GetString(3).Trim() == "T")
+        //            {
+        //                r.soundSystemRequired = true;
+        //            }
+        //            else
+        //            {
+        //                r.soundSystemRequired = false;
+        //            }
+
+        //            r.numberOfChair = reader.GetInt32(4);
+        //            if (reader.GetString(5) == "T")
+        //            {
+        //                r.isAvailable = true;
+        //            }
+        //            else
+        //            {
+        //                r.isAvailable = false;
+        //            }
+        //            r.specialItems = reader.GetString(6);
+        //            r.billAmount = reader.GetInt32(7) / 100;
+        //            r.maxCapacity = reader.GetInt32(8);
+        //            return r;
+        //        }
+        //    }
+
+        //    return null;
+        //}
+
+        public void deleteRoom(Room r)
         {
             MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "UPDATE Room SET roomTypeID = ?roomTypeID, roomFloor = ?roomFloor WHERE roomNumber = ?roomNumber";
-            command.Parameters.AddWithValue("?roomTypeID", sr.roomTypeID);
-            command.Parameters.AddWithValue("?roomFloor", sr.roomFloor);
-            command.Parameters.AddWithValue("?roomNumber", sr.roomNumber);
+            command.CommandText = "DELETE FROM ROOM WHERE roomNumber=?roomNumber";
+            command.Parameters.AddWithValue("?roomNumber", r.RoomNumber);
             command.ExecuteNonQuery();
-
-            MySqlCommand command2 = connection.CreateCommand();
-            command2.CommandText = "UPDATE RoomType SET bedSize = ?bedSize, numberOfBeds = ?numberOfBeds, availability = ?availability, specialItems = ?specialItems, billAmount = ?billAmount, maxCapacity = ?maxCapacity, type = ?type WHERE roomTypeID = ?roomTypeID";
-            command2.Parameters.AddWithValue("?bedSize", sr.bedSize);
-            command2.Parameters.AddWithValue("?numberOfBeds", sr.numberOfBeds);
-            if (sr.isAvailable == true)
-            {
-                command2.Parameters.AddWithValue("?availability", "T");
-            }
-            else
-            {
-                command2.Parameters.AddWithValue("?availability", "F");
-            }
-            command2.Parameters.AddWithValue("?specialItems", sr.specialItems);
-            command2.Parameters.AddWithValue("?billAmount", Convert.ToInt32(sr.billAmount * 100));
-            command2.Parameters.AddWithValue("?maxCapacity", sr.maxCapacity);
-            command2.Parameters.AddWithValue("?type", "SingleRoom");
-            command2.Parameters.AddWithValue("?roomTypeID", sr.roomTypeID);
-            command.ExecuteNonQuery();
-        }
-
-        public void InsertSuite(Suite s)
-        {
-            s.roomTypeID = GetNewRoomTypeID();
-
-            MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "INSERT INTO RoomType (roomTypeID, bedSize, numberOfBeds, availability, specialItems, billAmount, maxCapacity, type) VALUES (?roomTypeID, ?bedSize, ?numberOfBeds, ?availability, ?specialItems, ?billAmount, ?maxCapacity, ?type)";
-            command.Parameters.AddWithValue("?roomTypeID", s.roomTypeID);
-            command.Parameters.AddWithValue("?bedSize", s.bedSize);
-            command.Parameters.AddWithValue("?numberOfBeds", s.numberOfBeds);
-            if (s.isAvailable == true)
-            {
-                command.Parameters.AddWithValue("?availability", "T");
-            }
-            else
-            {
-                command.Parameters.AddWithValue("?availability", "F");
-            }
-            command.Parameters.AddWithValue("?specialItems", s.specialItems);
-            command.Parameters.AddWithValue("?billAmount", Convert.ToInt32(s.billAmount * 100));
-            command.Parameters.AddWithValue("?maxCapacity", s.maxCapacity);
-            command.Parameters.AddWithValue("?type", "Suite");
-
-            command.ExecuteNonQuery();
-
-            MySqlCommand command2 = connection.CreateCommand();
-            command2.CommandText = "INSERT INTO Room (roomNumber,roomTypeID,roomFloor) VALUES (?roomNumber,?roomTypeID,?roomFloor)";
-            command2.Parameters.AddWithValue("?roomNumber", s.roomNumber);
-            command2.Parameters.AddWithValue("?roomTypeID", s.roomTypeID);
-            command2.Parameters.AddWithValue("?roomFloor", s.roomFloor);
-
-            command2.ExecuteNonQuery();
-
-        }
-
-        public void DeleteSuite(Suite s)
-        {
-            MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "DELETE Room WHERE roomNumber = ?roomNumber";
-            command.Parameters.AddWithValue("?roomNumber", s.roomNumber);
-            command.ExecuteNonQuery();
-
-            MySqlCommand command2 = connection.CreateCommand();
-            command.CommandText = "DELETE RoomType WHERE roomTypeID = ?roomTypeID";
-            command.Parameters.AddWithValue("?roomTypeID", s.roomTypeID);
-            command.ExecuteNonQuery();
-        }
-
-        public void UpdateSuite(Suite s)
-        {
-            MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "UPDATE Room SET roomTypeID = ?roomTypeID, roomFloor = ?roomFloor WHERE roomNumber = ?roomNumber";
-            command.Parameters.AddWithValue("?roomTypeID", s.roomTypeID);
-            command.Parameters.AddWithValue("?roomFloor", s.roomFloor);
-            command.Parameters.AddWithValue("?roomNumber", s.roomNumber);
-            command.ExecuteNonQuery();
-
-            MySqlCommand command2 = connection.CreateCommand();
-            command2.CommandText = "UPDATE RoomType SET bedSize = ?bedSize, numberOfBeds = ?numberOfBeds, availability = ?availability, specialItems = ?specialItems, billAmount = ?billAmount, maxCapacity = ?maxCapacity, type = ?type WHERE roomTypeID = ?roomTypeID";
-            command2.Parameters.AddWithValue("?bedSize", s.bedSize);
-            command2.Parameters.AddWithValue("?numberOfBeds", s.numberOfBeds);
-            if (s.isAvailable == true)
-            {
-                command2.Parameters.AddWithValue("?availability", "T");
-            }
-            else
-            {
-                command2.Parameters.AddWithValue("?availability", "F");
-            }
-            command2.Parameters.AddWithValue("?specialItems", s.specialItems);
-            command2.Parameters.AddWithValue("?billAmount", Convert.ToInt32(s.billAmount * 100));
-            command2.Parameters.AddWithValue("?maxCapacity", s.maxCapacity);
-            command2.Parameters.AddWithValue("?type", "Suite");
-            command2.Parameters.AddWithValue("?roomTypeID", s.roomTypeID);
-            command.ExecuteNonQuery();
-        }
-
-        public void InsertConferenceRoom(ConferenceRoom cr)
-        {
-            cr.roomTypeID = GetNewRoomTypeID();
-
-            MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "INSERT INTO RoomType (roomTypeID, bedSize, numberOfBeds, availability, specialItems, billAmount, maxCapacity, type) VALUES (?roomTypeID, ?bedSize, ?numberOfBeds, ?availability, ?specialItems, ?billAmount, ?maxCapacity, ?type)";
-            command.Parameters.AddWithValue("?roomTypeID", cr.roomTypeID);
-            if (cr.soundSystemRequired)
-            {
-                command.Parameters.AddWithValue("?bedSize", "T");
-            }
-            else
-            {
-                command.Parameters.AddWithValue("?bedSize", "F");
-            }
-
-            command.Parameters.AddWithValue("?numberOfBeds", cr.numberOfChair);
-            if (cr.isAvailable == true)
-            {
-                command.Parameters.AddWithValue("?availability", "T");
-            }
-            else
-            {
-                command.Parameters.AddWithValue("?availability", "F");
-            }
-            command.Parameters.AddWithValue("?specialItems", cr.specialItems);
-            command.Parameters.AddWithValue("?billAmount", Convert.ToInt32(cr.billAmount * 100));
-            command.Parameters.AddWithValue("?maxCapacity", cr.maxCapacity);
-            command.Parameters.AddWithValue("?type", "ConferenceRoom");
-
-            command.ExecuteNonQuery();
-
-            MySqlCommand command2 = connection.CreateCommand();
-            command2.CommandText = "INSERT INTO Room (roomNumber,roomTypeID,roomFloor) VALUES (?roomNumber,?roomTypeID,?roomFloor)";
-            command2.Parameters.AddWithValue("?roomNumber", cr.roomNumber);
-            command2.Parameters.AddWithValue("?roomTypeID", cr.roomTypeID);
-            command2.Parameters.AddWithValue("?roomFloor", cr.roomFloor);
-
-            command2.ExecuteNonQuery();
-
-        }
-
-        public void DeleteConferenceRoom(ConferenceRoom cr)
-        {
-            MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "DELETE Room WHERE roomNumber = ?roomNumber";
-            command.Parameters.AddWithValue("?roomNumber", cr.roomNumber);
-            command.ExecuteNonQuery();
-
-            MySqlCommand command2 = connection.CreateCommand();
-            command.CommandText = "DELETE RoomType WHERE roomTypeID = ?roomTypeID";
-            command.Parameters.AddWithValue("?roomTypeID", cr.roomTypeID);
-            command.ExecuteNonQuery();
-        }
-
-        public void UpdateConferenceRoom(ConferenceRoom cr)
-        {
-            MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "UPDATE Room SET roomTypeID = ?roomTypeID, roomFloor = ?roomFloor WHERE roomNumber = ?roomNumber";
-            command.Parameters.AddWithValue("?roomTypeID", cr.roomTypeID);
-            command.Parameters.AddWithValue("?roomFloor", cr.roomFloor);
-            command.Parameters.AddWithValue("?roomNumber", cr.roomNumber);
-            command.ExecuteNonQuery();
-
-            MySqlCommand command2 = connection.CreateCommand();
-            command2.CommandText = "UPDATE RoomType SET bedSize = ?bedSize, numberOfBeds = ?numberOfBeds, availability = ?availability, specialItems = ?specialItems, billAmount = ?billAmount, maxCapacity = ?maxCapacity, type = ?type WHERE roomTypeID = ?roomTypeID";
-            if (cr.soundSystemRequired)
-            {
-                command2.Parameters.AddWithValue("?bedSize", "T");
-            }
-            else
-            {
-                command2.Parameters.AddWithValue("?bedSize", "F");
-            }
-
-            command2.Parameters.AddWithValue("?numberOfBeds", cr.numberOfChair);
-            if (cr.isAvailable == true)
-            {
-                command2.Parameters.AddWithValue("?availability", "T");
-            }
-            else
-            {
-                command2.Parameters.AddWithValue("?availability", "F");
-            }
-            command2.Parameters.AddWithValue("?specialItems", cr.specialItems);
-            command2.Parameters.AddWithValue("?billAmount", Convert.ToInt32(cr.billAmount * 100));
-            command2.Parameters.AddWithValue("?maxCapacity", cr.maxCapacity);
-            command2.Parameters.AddWithValue("?type", "ConferenceRoom");
-            command2.Parameters.AddWithValue("?roomTypeID", cr.roomTypeID);
-            command.ExecuteNonQuery();
-        }
-
-
-        public Room FindRoomByRoomNumber(int roomNumber)
-        {
-
-
-            MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "SELECT R.roomNumber, R.roomFloor, R.roomTypeID, RT.bedsize, RT.numberOfBeds, RT.availability, RT.specialItems, RT.billAmount, RT.maxCapacity, RT.type FROM Room AS R, RoomType AS RT WHERE R.roomNumber = ?roomNumber and R.roomTypeID = RT.roomTypeID";
-            command.Parameters.AddWithValue("?roomNumber", roomNumber);
-            MySqlDataReader reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                if (reader.GetString(9) == "SingleRoom")
-                {
-                    SingleRoom r = new SingleRoom();
-
-                    r.roomNumber = reader.GetInt32(0);
-                    r.roomFloor = reader.GetInt32(1);
-                    r.roomTypeID = reader.GetInt32(2);
-                    r.bedSize = reader.GetString(3);
-                    r.numberOfBeds = reader.GetInt32(4);
-                    if (reader.GetString(5) == "T")
-                    {
-                        r.isAvailable = true;
-                    }
-                    else
-                    {
-                        r.isAvailable = false;
-                    }
-                    r.specialItems = reader.GetString(6);
-                    r.billAmount = reader.GetInt32(7) / 100;
-                    r.maxCapacity = reader.GetInt32(8);
-                    return r;
-                }
-
-                if (reader.GetString(9) == "Suite")
-                {
-                    Suite r = new Suite();
-
-                    r.roomNumber = reader.GetInt32(0);
-                    r.roomFloor = reader.GetInt32(1);
-                    r.roomTypeID = reader.GetInt32(2);
-                    r.bedSize = reader.GetString(3);
-                    r.numberOfBeds = reader.GetInt32(4);
-                    if (reader.GetString(5) == "T")
-                    {
-                        r.isAvailable = true;
-                    }
-                    else
-                    {
-                        r.isAvailable = false;
-                    }
-                    r.specialItems = reader.GetString(6);
-                    r.billAmount = reader.GetInt32(7) / 100;
-                    r.maxCapacity = reader.GetInt32(8);
-                    return r;
-                }
-
-                if (reader.GetString(9) == "ConferenceRoom")
-                {
-                    ConferenceRoom r = new ConferenceRoom();
-
-                    r.roomNumber = reader.GetInt32(0);
-                    r.roomFloor = reader.GetInt32(1);
-                    r.roomTypeID = reader.GetInt32(2);
-                    if (reader.GetString(3).Trim() == "T")
-                    {
-                        r.soundSystemRequired = true;
-                    }
-                    else
-                    {
-                        r.soundSystemRequired = false;
-                    }
-
-                    r.numberOfChair = reader.GetInt32(4);
-                    if (reader.GetString(5) == "T")
-                    {
-                        r.isAvailable = true;
-                    }
-                    else
-                    {
-                        r.isAvailable = false;
-                    }
-                    r.specialItems = reader.GetString(6);
-                    r.billAmount = reader.GetInt32(7) / 100;
-                    r.maxCapacity = reader.GetInt32(8);
-                    return r;
-                }
-            }
-
-            return null;
         }
 
         public void insertBill(Bill b)
         {
             MySqlCommand command = connection.CreateCommand();
             command.CommandText = "INSERT INTO Reservation (billID, customerID, roomTypeID, isPaid) VALUES (?billID, ?customerID, ?roomTypeID, ?isPaid)";
-            command.Parameters.AddWithValue("?billID", b.billID);
-            command.Parameters.AddWithValue("?customerID", b.customerID);
-            command.Parameters.AddWithValue("?roomTypeID", b.roomTypeID);
-            if (b.isPaid)
+            command.Parameters.AddWithValue("?billID", b.BillID);
+            command.Parameters.AddWithValue("?customerID", b.CustomerID);
+            command.Parameters.AddWithValue("?roomTypeID", b.RoomTypeID);
+            if (b.IsPaid)
             {
                 command.Parameters.AddWithValue("?isPaid", "T");
             }
@@ -782,18 +710,18 @@ namespace DatabaseUtility
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                b.billID = reader.GetInt32(0);
-                b.customerID = reader.GetInt32(1);
-                b.roomTypeID = reader.GetInt32(2);
+                b.BillID = reader.GetInt32(0);
+                b.CustomerID = reader.GetInt32(1);
+                b.RoomTypeID = reader.GetInt32(2);
                 if (reader.GetString(3) == "T")
                 {
-                    b.isPaid = true;
+                    b.IsPaid = true;
                 }
                 else
                 {
-                    b.isPaid = false;
+                    b.IsPaid = false;
                 }
-                b.billAmount = reader.GetInt32(4) / 100;
+                b.TotalPrice = reader.GetInt32(4) / 100;
             }
 
             return b;
@@ -816,19 +744,21 @@ namespace DatabaseUtility
         public void UpdateBill(Bill b)
         {
             MySqlCommand command = connection.CreateCommand();
-            command.CommandText = "UPDATE Bill SET customerID = ?customerID, roomTypeID = ?roomTypeID, isPaid = ?isPaid WHERE billID=?billID";
-            command.Parameters.AddWithValue("?customerID", b.customerID);
-            command.Parameters.AddWithValue("?roomTypeID", b.roomTypeID);
-            if (b.isPaid)
+            command.CommandText = "UPDATE Bill SET customerID = ?customerID, roomTypeID = ?roomTypeID, isPaid = ?isPaidInt, totalPrice = ?totalPrice, reservationID = ?reservationID, roomServiceID = ?roomServiceID WHERE billID=?billID";
+            command.Parameters.AddWithValue("?customerID", b.CustomerID);
+            command.Parameters.AddWithValue("?roomTypeID", b.RoomTypeID);
+            if (b.IsPaid)
             {
-                command.Parameters.AddWithValue("?isPaid", "T");
+                command.Parameters.AddWithValue("?isPaidInt", 1);
             }
             else
             {
-                command.Parameters.AddWithValue("?isPaid", "F");
+                command.Parameters.AddWithValue("?isPaidInt", 0);
             }
-
-            command.Parameters.AddWithValue("?billID", b.billID);
+            command.Parameters.AddWithValue("?totalPrice", b.TotalPrice);
+            command.Parameters.AddWithValue("?reservationID", b.ReservationID);
+            command.Parameters.AddWithValue("?roomServiceID", b.RoomServiceID);
+            command.Parameters.AddWithValue("?billID", b.BillID);
 
             command.ExecuteNonQuery();
         }
@@ -837,7 +767,7 @@ namespace DatabaseUtility
         {
             MySqlCommand command = connection.CreateCommand();
             command.CommandText = "DELETE Bill WHERE billID=?billID";
-            command.Parameters.AddWithValue("?reservationID", b.billID);
+            command.Parameters.AddWithValue("?reservationID", b.BillID);
             command.ExecuteNonQuery();
         }
 
@@ -845,13 +775,13 @@ namespace DatabaseUtility
         {
             MySqlCommand command = connection.CreateCommand();
             command.CommandText = "INSERT INTO RoomService (roomServiceID, itemOrdered, customerID, roomNumber, specialInstructions, totalPrice, timeOrderedFor) VALUES (?roomServiceID, ?itemOrdered, ?customerID, ?roomNumber, ?specialInstructions, ?totalPrice, ?timeOrderedFor)";
-            command.Parameters.AddWithValue("?roomServiceID", rs.roomServiceID);
-            command.Parameters.AddWithValue("?itemOrdered", rs.itemOrdered);
-            command.Parameters.AddWithValue("?customerID", rs.customerID);
-            command.Parameters.AddWithValue("?roomNumber", rs.roomNumber);
-            command.Parameters.AddWithValue("?specialInstructions", rs.specialInstructions);
-            command.Parameters.AddWithValue("?totalPrice", Convert.ToInt32(rs.totalPrice * 100));
-            command.Parameters.AddWithValue("?timeOrderedFor", rs.timeOrderedFor);
+            command.Parameters.AddWithValue("?roomServiceID", rs.RoomServiceID);
+            command.Parameters.AddWithValue("?itemOrdered", rs.ItemOrdered);
+            command.Parameters.AddWithValue("?customerID", rs.CustomerID);
+            command.Parameters.AddWithValue("?roomNumber", rs.RoomNumber);
+            command.Parameters.AddWithValue("?specialInstructions", rs.SpecialInstructions);
+            command.Parameters.AddWithValue("?totalPrice", Convert.ToInt32(rs.TotalPrice * 100));
+            command.Parameters.AddWithValue("?timeOrderedFor", rs.TimeOrderedFor);
             command.ExecuteNonQuery();
 
         }
@@ -868,6 +798,8 @@ namespace DatabaseUtility
                 result = reader.GetInt32(0) + 1;
             }
 
+            reader.Close();
+
             return result;
         }
 
@@ -881,13 +813,13 @@ namespace DatabaseUtility
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                r.roomServiceID = reader.GetInt32(0);
-                r.itemOrdered = reader.GetString(1);
-                r.customerID = reader.GetInt32(2);
-                r.roomNumber = reader.GetInt32(3);
-                r.specialInstructions = reader.GetString(4);
-                r.totalPrice = reader.GetInt32(5) / 100;
-                r.timeOrderedFor = reader.GetDateTime(6);
+                r.RoomServiceID = reader.GetInt32(0);
+                r.ItemOrdered = reader.GetString(1);
+                r.CustomerID = reader.GetInt32(2);
+                r.RoomNumber = reader.GetInt32(3);
+                r.SpecialInstructions = reader.GetString(4);
+                r.TotalPrice = reader.GetInt32(5) / 100;
+                r.TimeOrderedFor = reader.GetDateTime(6);
 
             }
 
@@ -898,13 +830,13 @@ namespace DatabaseUtility
         {
             MySqlCommand command = connection.CreateCommand();
             command.CommandText = "UPDATE Reservation SET itemOrdered = ?itemOrdered, customerID = ?customerID, roomNumber = ?roomNumber, specialInstructions = ?specialInstructions, totalPrice = ?totalPrice, timeOrderedFor = ?timeOrderedFor WHERE roomServiceID = ?roomServiceID";
-            command.Parameters.AddWithValue("?itemOrdered", rs.itemOrdered);
-            command.Parameters.AddWithValue("?customerID", rs.customerID);
-            command.Parameters.AddWithValue("?roomNumber", rs.roomNumber);
-            command.Parameters.AddWithValue("?specialInstructions", rs.specialInstructions);
-            command.Parameters.AddWithValue("?totalPrice", Convert.ToInt32(rs.totalPrice * 100));
-            command.Parameters.AddWithValue("?timeOrderedFor", rs.timeOrderedFor);
-            command.Parameters.AddWithValue("?roomServiceID", rs.roomServiceID);
+            command.Parameters.AddWithValue("?itemOrdered", rs.ItemOrdered);
+            command.Parameters.AddWithValue("?customerID", rs.CustomerID);
+            command.Parameters.AddWithValue("?roomNumber", rs.RoomNumber);
+            command.Parameters.AddWithValue("?specialInstructions", rs.SpecialInstructions);
+            command.Parameters.AddWithValue("?totalPrice", Convert.ToInt32(rs.TotalPrice * 100));
+            command.Parameters.AddWithValue("?timeOrderedFor", rs.TimeOrderedFor);
+            command.Parameters.AddWithValue("?roomServiceID", rs.RoomServiceID);
 
             command.ExecuteNonQuery();
         }
@@ -913,7 +845,7 @@ namespace DatabaseUtility
         {
             MySqlCommand command = connection.CreateCommand();
             command.CommandText = "DELETE RoomService WHERE roomServiceID=?roomServiceID";
-            command.Parameters.AddWithValue("?roomServiceID", r.roomServiceID);
+            command.Parameters.AddWithValue("?roomServiceID", r.RoomServiceID);
             command.ExecuteNonQuery();
         }
 
@@ -921,12 +853,12 @@ namespace DatabaseUtility
         {
             MySqlCommand command = connection.CreateCommand();
             command.CommandText = "INSERT INTO CreditCard (cardNumber, customerID, csvNumber, expiryDate, nameOnCard, cardType) VALUES (?cardNumber, ?customerID, ?csvNumber, ?expiryDate, ?nameOnCard, ?cardType)";
-            command.Parameters.AddWithValue("?cardNumber", cc.cardNumber);
-            command.Parameters.AddWithValue("?customerID", cc.customerID);
-            command.Parameters.AddWithValue("?csvNumber", cc.csvNumber);
-            command.Parameters.AddWithValue("?expiryDate", cc.expiryDate);
-            command.Parameters.AddWithValue("?nameOnCard", cc.nameOnCard);
-            command.Parameters.AddWithValue("?cardType", cc.cardType);
+            command.Parameters.AddWithValue("?cardNumber", cc.CardNumber);
+            command.Parameters.AddWithValue("?customerID", cc.CustomerID);
+            command.Parameters.AddWithValue("?csvNumber", cc.CsvNumber);
+            command.Parameters.AddWithValue("?expiryDate", cc.ExpiryDate);
+            command.Parameters.AddWithValue("?nameOnCard", cc.NameOnCard);
+            command.Parameters.AddWithValue("?cardType", cc.CardType);
             command.ExecuteNonQuery();
 
         }
@@ -941,12 +873,12 @@ namespace DatabaseUtility
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                cc.cardNumber = reader.GetInt32(0);
-                cc.customerID = reader.GetInt32(1);
-                cc.csvNumber = reader.GetInt32(2);
-                cc.expiryDate = reader.GetDateTime(3);
-                cc.nameOnCard = reader.GetString(4);
-                cc.cardType = reader.GetString(5);
+                cc.CardNumber = reader.GetInt32(0).ToString();
+                cc.CustomerID = reader.GetInt32(1);
+                cc.CsvNumber = reader.GetInt32(2);
+                cc.ExpiryDate = reader.GetDateTime(3);
+                cc.NameOnCard = reader.GetString(4);
+                cc.CardType = reader.GetString(5);
             }
 
             return cc;
@@ -956,12 +888,12 @@ namespace DatabaseUtility
         {
             MySqlCommand command = connection.CreateCommand();
             command.CommandText = "UPDATE CreditCard SET customerID = ?customerID, csvNumber = ?csvNumber, expiryDate = ?expiryDate, nameOnCard = ?nameOnCard, cardType = ?cardType WHERE cardNumber = ?cardNumber";
-            command.Parameters.AddWithValue("?customerID", cc.customerID);
-            command.Parameters.AddWithValue("?csvNumber", cc.csvNumber);
-            command.Parameters.AddWithValue("?expiryDate", cc.expiryDate);
-            command.Parameters.AddWithValue("?nameOnCard", cc.nameOnCard);
-            command.Parameters.AddWithValue("?cardType", cc.cardType);
-            command.Parameters.AddWithValue("?cardNumber", cc.cardNumber);
+            command.Parameters.AddWithValue("?customerID", cc.CustomerID);
+            command.Parameters.AddWithValue("?csvNumber", cc.CsvNumber);
+            command.Parameters.AddWithValue("?expiryDate", cc.ExpiryDate);
+            command.Parameters.AddWithValue("?nameOnCard", cc.NameOnCard);
+            command.Parameters.AddWithValue("?cardType", cc.CardType);
+            command.Parameters.AddWithValue("?cardNumber", cc.CardNumber);
 
             command.ExecuteNonQuery();
         }
@@ -970,7 +902,7 @@ namespace DatabaseUtility
         {
             MySqlCommand command = connection.CreateCommand();
             command.CommandText = "DELETE CreditCard WHERE cardNumber = ?cardNumber";
-            command.Parameters.AddWithValue("?cardNumber", cc.cardNumber);
+            command.Parameters.AddWithValue("?cardNumber", cc.CardNumber);
             command.ExecuteNonQuery();
         }
 

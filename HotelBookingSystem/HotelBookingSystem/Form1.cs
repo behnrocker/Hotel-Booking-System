@@ -8,8 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-//For the DBUtil class.
-using DatabaseUtility;
 using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
 
@@ -46,9 +44,9 @@ namespace HotelBookingSystem
                 roomListBuilder();
                 creditCardListBuilder(); 
                 employeeListBuilder();
+                checkInListBuilder();
                 roomServiceListBuilder();
                 billListBuilder();
-                checkInListBuilder();
             }
             catch
             {
@@ -65,39 +63,172 @@ namespace HotelBookingSystem
 
         //---------------------------CHECK-IN TAB---------------------------\\
 
+        //WORKING
+        //Changes the textboxes, depending on which item is clicked on.
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int selectedIndex = listBox1.SelectedIndex;
+            int customerID = reservationList[selectedIndex].CustomerID;
+            String firstName = "";
+            String lastName = "";
+
+            //Determines customer information based on customerID from reservation.
+            int listSize = customerList.Count();
+
+            for(int x = 0; x < listSize; x++)
+            {
+                if(customerList[x].CustomerID == customerID)
+                {
+                    firstName = customerList[x].FirstName;
+                    lastName = customerList[x].LastName;
+                }
+            }
+
+            textBox1.Text = firstName;
+            textBox2.Text = lastName;
+            textBox3.Text = reservationList[selectedIndex].ReservationID.ToString();
+            textBox4.Text = reservationList[selectedIndex].RoomNumber.ToString();
+        }
+
         //NOT WORKING
         //Filter button
         private void button1_Click(object sender, EventArgs e)
         {
-            //Gathers info from fields, stores as variables. Removes leading and trailing spaces.
+            //Gets date from calendar
 
-            //Searches object list for fields that are valid. If variable is blank, that field is not searched.
+            //Searches reservations, stores matching day items in list, displays list.
         }
 
-        //NOT WORKING
+        //WORKING
         //Check-in button
         private void button2_Click(object sender, EventArgs e)
         {
-            //Flags reservation as checked in on DB.
+            if (listBox1.SelectedIndex < 0)
+            {
+                MessageBox.Show("Please choose a customer to check in");
+            }
+            else
+            {
+                int selectedIndex = listBox1.SelectedIndex;
 
+                DialogResult dialogResult = MessageBox.Show("Are you sure you want to check in this reservation?", "Are you sure?", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    dbUtil = new DBUtil();
+                    Reservation reservation = checkedOutReservationList[selectedIndex];
+                    reservation.IsCheckedIn = true;
+
+                    try
+                    {
+                        //Connects to DB.
+                        dbUtil.Open();
+
+                        //Updates reservation
+                        dbUtil.UpdateReservation(reservation);
+
+                        //Refreshes reservation List from DB
+                        reservationListBuilder();
+                        checkInListBuilder();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error deleting employee. Please try again.\n\n" + ex.ToString());
+                    }
+                    finally
+                    {
+                        dbUtil.Close();
+                    }
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    //Nothing happens.
+                }
+            }
         }
 
         //---------------------------CHECK-OUT TAB---------------------------\\
 
-        //NOT WORKING
-        //Filter button
-        private void button4_Click(object sender, EventArgs e)
+        //WORKING
+        //Changes the textboxes, depending on which item is clicked on.
+        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //Gathers info from fields, stores as variables. Removes leading and trailing spaces.
+            int selectedIndex = listBox2.SelectedIndex;
+            int customerID = reservationList[selectedIndex].CustomerID;
+            String firstName = "";
+            String lastName = "";
 
-            //Searches object list for fields that are valid. If variable is blank, that field is not searched.
+            //Determines customer information based on customerID from reservation.
+            int listSize = customerList.Count();
+
+            for (int x = 0; x < listSize; x++)
+            {
+                if (customerList[x].CustomerID == customerID)
+                {
+                    firstName = customerList[x].FirstName;
+                    lastName = customerList[x].LastName;
+                }
+            }
+
+            textBox8.Text = firstName;
+            textBox7.Text = lastName;
+            textBox6.Text = reservationList[selectedIndex].ReservationID.ToString();
+            textBox5.Text = reservationList[selectedIndex].RoomNumber.ToString();
         }
 
         //NOT WORKING
+        //Filter button. 
+        private void button4_Click(object sender, EventArgs e)
+        {
+            //Gets date from calendar
+
+            //Searches reservations, stores matching day items in list, displays list.
+        }
+
+        //WORKING
         //Check-out button
         private void button3_Click(object sender, EventArgs e)
         {
-            //Flags reservation as checked out on DB.
+            if (listBox2.SelectedIndex < 0)
+            {
+                MessageBox.Show("Please choose a customer to check out");
+            }
+            else
+            {
+                int selectedIndex = listBox2.SelectedIndex;
+
+                DialogResult dialogResult = MessageBox.Show("Are you sure you want to check out this reservation?", "Are you sure?", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    dbUtil = new DBUtil();
+                    Reservation reservation = checkedInReservationList[selectedIndex];
+                    reservation.IsCheckedIn = false;
+
+                    try
+                    {
+                        //Connects to DB.
+                        dbUtil.Open();
+
+                        //Updates reservation
+                        dbUtil.UpdateReservation(reservation);
+
+                        //Refreshes reservation List from DB
+                        reservationListBuilder();
+                        checkInListBuilder();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error deleting employee. Please try again.\n\n" + ex.ToString());
+                    }
+                    finally
+                    {
+                        dbUtil.Close();
+                    }
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    //Nothing happens.
+                }
+            }
         }
 
         //---------------------------RESERVATION TAB---------------------------\\
@@ -108,6 +239,9 @@ namespace HotelBookingSystem
         {
 
             Form2 newReservationForm = new Form2();
+            newReservationForm.loadCustomerList(customerList);
+            newReservationForm.loadRoomList(roomList);
+            newReservationForm.loadReservationList(reservationList);
             newReservationForm.Show();
         }
 
@@ -128,33 +262,104 @@ namespace HotelBookingSystem
 
         //---------------------------ROOM SERVICE TAB---------------------------\\
 
-        //NOT WORKING
+        //WORKING
+        //Changes the textboxes, depending on which item is clicked on.
+        private void listBox4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int selectedIndex = listBox4.SelectedIndex;
+
+            //Finds out room number, based on the checked in rooms that match the customer.
+            int listSize = checkedInReservationList.Count();
+            int roomNumber = 0;
+
+            for(int x = 0; x < listSize; x++)
+            {
+                if(checkedInReservationList[x].CustomerID == customerList[selectedIndex].CustomerID)
+                {
+                    roomNumber = checkedInReservationList[x].RoomNumber;
+                }
+            }
+
+            textBox9.Text = roomNumber.ToString();
+            textBox10.Text = customerList[selectedIndex].FirstName;
+            textBox11.Text = customerList[selectedIndex].LastName;
+        }
+
+        //WORKING
         //Order button (Submits order)
         private void button8_Click(object sender, EventArgs e)
         {
-
-            //Gather variables, create String, and display on the dialog box.
-
-            DialogResult dialogResult = MessageBox.Show("DISPLAY HERE", "Order confirmation", MessageBoxButtons.YesNo);
-            if (dialogResult == DialogResult.Yes)
+            if(textBox12.Text == "" || textBox13.Text == "")
             {
-                //Process room service order.
-
-                //Clear all fields.
-            }
-            else if (dialogResult == DialogResult.No)
+                MessageBox.Show("Please fill in both item and price information");
+            } else if(listBox4.SelectedIndex == -1)
             {
-                //Go back to original form.
+                MessageBox.Show("Please choose a customer in the list");
+            } else
+            {
+                DateTime currentDateTime = new DateTime();
+                textBox14.Text = currentDateTime.ToLongDateString();
+
+                String item = textBox12.Text;
+                String price = textBox13.Text;
+                String timeOrdered = textBox14.Text;
+                String specialInstructions = textBox15.Text;
+                double priceDouble = Double.Parse(price);
+
+                //Gather variables, create String, and display on the dialog box.
+
+                DialogResult dialogResult = MessageBox.Show("Please confirm the following looks correct: \n\n"
+                                                                + "Item: " + item + "\n"
+                                                                + "Price: $" + price + "\n"
+                                                                + "Time Ordered: " + timeOrdered + "\n"
+                                                                + "Special Instructions: " + specialInstructions, "Order confirmation", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    try
+                    {
+                        //Connect to DB
+                        dbUtil = new DBUtil();
+                        dbUtil.Open();
+
+                        //Determine next room service ID.
+                        int roomServiceID = dbUtil.GetNewRoomServiceID();
+
+                        //Finds out customer number, based on the checked in rooms that match the customer.
+                        int listSize = checkedInReservationList.Count();
+                        int customerID = checkedInReservationList[listBox4.SelectedIndex].CustomerID;
+
+                        //Create RoomService object
+                        RoomService roomService = new RoomService(roomServiceID, item, customerID, Int32.Parse(textBox9.Text), specialInstructions, priceDouble, currentDateTime);
+
+                        //Adds to database.
+                        dbUtil.insertRoomService(roomService);
+
+                        roomServiceListBuilder();
+
+                        //Clear all fields.
+                        listBox4.SelectedIndex = -1;
+                        textBox9.Text = "";
+                        textBox10.Text = "";
+                        textBox11.Text = "";
+                        textBox12.Text = "";
+                        textBox13.Text = "";
+                        textBox14.Text = "";
+                        textBox15.Text = "";
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
+                    finally
+                    {
+                        dbUtil.Close();
+                    }
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    //Go back to original form.
+                }
             }
-        }
-
-        //NOT WORKING
-        //Filter button
-        private void button7_Click(object sender, EventArgs e)
-        {
-            //Gathers info from fields, stores as variables. Removes leading and trailing spaces.
-
-            //Searches object list for fields that are valid. If variable is blank, that field is not searched.
         }
 
         //---------------------------CUSTOMERS TAB---------------------------\\
@@ -359,32 +564,112 @@ namespace HotelBookingSystem
             }
         }
 
-        //NOT WORKING
+        //WORKING
         //Delete User
         private void button10_Click(object sender, EventArgs e)
         {
+            int selectedIndex = listBox6.SelectedIndex;
 
+            if(selectedIndex < 0)
+            {
+                MessageBox.Show("Please choose an employee to delete.");
+            }
+            else
+            {
+                DialogResult dialogResult = MessageBox.Show("Are you sure you want to delete " + employeeList[selectedIndex].FirstName + " " + employeeList[selectedIndex].LastName, "Warning!", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                { 
+                    //Gets employee ID of item.
+                    int employeeID = employeeList[selectedIndex].EmployeeID;
+                    dbUtil = new DBUtil();
+
+                    try
+                    {
+                        //Connects to DB. refreshes the employee list.
+                        dbUtil.Open();
+
+                        //Deletes user
+                        dbUtil.DeleteEmployee(employeeList[selectedIndex]);
+
+                        //Refreshes Employee List from DB
+                        employeeListBuilder();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error deleting employee. Please try again.\n\n" + ex.ToString());
+                    }
+                    finally
+                    {
+                        dbUtil.Close();
+                    }
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    //Nothing happens.
+                }
+            }
         }
 
-        //NOT WORKING
+        //WORKING
         //Create User
         private void button11_Click(object sender, EventArgs e)
         {
-
+            Form7 newEmployeeForm = new Form7();
+            newEmployeeForm.Show();
         }
 
-        //NOT WORKING
+        //WORKING
         //Delete Room
         private void button12_Click(object sender, EventArgs e)
         {
+            int selectedIndex = listBox7.SelectedIndex;
 
+            if (selectedIndex < 0)
+            {
+                MessageBox.Show("Please choose a room to delete.");
+            }
+            else
+            {
+                DialogResult dialogResult = MessageBox.Show("Are you sure you want to delete Room " + roomList[selectedIndex].RoomNumber + "?", "Warning!", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    //Gets room number of room.
+                    int roomNumber = roomList[selectedIndex].RoomNumber;
+                    dbUtil = new DBUtil();
+
+                    try
+                    {
+                        //Connects to DB.
+                        dbUtil.Open();
+
+                        //Deletes room
+                        dbUtil.deleteRoom(roomList[selectedIndex]);
+
+                        //Refreshes Employee List from DB
+                        roomListBuilder();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error deleting room. Please try again.\n\n" + ex.ToString());
+                    }
+                    finally
+                    {
+                        dbUtil.Close();
+                    }
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    //Nothing happens.
+                }
+            }
         }
 
-        //NOT WORKING
+        //WORKING
         //Create Room
         private void button13_Click(object sender, EventArgs e)
         {
-
+            Form8 newRoomForm = new Form8();
+            newRoomForm.Show();
         }
 
         //---------------------------LIST BUILDERS---------------------------\\
@@ -395,6 +680,7 @@ namespace HotelBookingSystem
         {
             //Clears existing list, to make sure all data is up to date in the list.
             customerList.Clear();
+            listBox5.Items.Clear();
 
             MySqlCommand command = new MySqlCommand("SELECT * from CUSTOMER", dbUtil.Connection);
             MySqlDataReader reader = command.ExecuteReader();
@@ -438,6 +724,7 @@ namespace HotelBookingSystem
         {
             //Clears existing list, if needed.
             reservationList.Clear();
+            listBox3.Items.Clear();
 
             MySqlCommand command = new MySqlCommand("SELECT * from RESERVATION", dbUtil.Connection);
             MySqlDataReader reader = command.ExecuteReader();
@@ -488,6 +775,7 @@ namespace HotelBookingSystem
         {
             //Clears existing list, if needed.
             roomList.Clear();
+            listBox7.Items.Clear();
 
             MySqlCommand command = new MySqlCommand("SELECT * from ROOM", dbUtil.Connection);
             MySqlDataReader reader = command.ExecuteReader();
@@ -528,6 +816,7 @@ namespace HotelBookingSystem
         {
             //Clears existing list, to make sure all data is up to date in the list.
             billList.Clear();
+            listBox8.Items.Clear();
 
             MySqlCommand command = new MySqlCommand("SELECT * from BILL", dbUtil.Connection);
             MySqlDataReader reader = command.ExecuteReader();
@@ -609,7 +898,7 @@ namespace HotelBookingSystem
 
             //Fills the credit card objects, and adds to list.
             //DEBUG
-            createFakeCreditCards();
+            //createFakeCreditCards();
 
             //int listSize = creditCardList.Count();
 
@@ -626,6 +915,7 @@ namespace HotelBookingSystem
         {
             //Clears existing list, if needed.
             employeeList.Clear();
+            listBox6.Items.Clear();
 
             MySqlCommand command = new MySqlCommand("SELECT * from EMPLOYEE", dbUtil.Connection);
             MySqlDataReader reader = command.ExecuteReader();
@@ -672,6 +962,7 @@ namespace HotelBookingSystem
         {
             //Clears existing list, if needed.
             roomServiceList.Clear();
+            listBox4.Items.Clear();
 
             MySqlCommand command = new MySqlCommand("SELECT * from ROOMSERVICE", dbUtil.Connection);
             MySqlDataReader reader = command.ExecuteReader();
@@ -701,11 +992,12 @@ namespace HotelBookingSystem
                 reader.Close();
             }
 
-            int listSize = roomServiceList.Count();
+            //Displays the customer list in the room service tab. Only shows currently checked in customers.
+            int listSize = checkedInReservationList.Count();
 
             for (int x = 0; x < listSize; x++)
             {
-                String displayString = ("Reservation " + reservationList[x].ReservationID.ToString());
+                String displayString = (customerList[x].FirstName + " " + customerList[x].LastName);
                 listBox4.Items.Add(displayString);
             }
         }
@@ -717,6 +1009,8 @@ namespace HotelBookingSystem
             //Clears existing lists, if needed.
             checkedInReservationList.Clear();
             checkedOutReservationList.Clear();
+            listBox1.Items.Clear();
+            listBox2.Items.Clear();
 
             int resListSize = reservationList.Count();
 
@@ -751,19 +1045,5 @@ namespace HotelBookingSystem
             }
         }
 
-
-        //---------------------------DEBUG---------------------------\\
-
-        //Fills the object lists with some placeholders until the DB is ready
-        public void createFakeCreditCards()
-        {
-            CreditCard fakeCard1 = new CreditCard("1234123412341234", "1", "123", "09/17", "Behn McIlwaine", "Visa");
-            CreditCard fakeCard2 = new CreditCard("5555555555555554", "2", "245", "10/18", "Testy Testerson", "Mastercard");
-            CreditCard fakeCard3 = new CreditCard("8264924472662847", "3", "262", "03/17", "Michelle Testerson", "Discover");
-
-            creditCardList.Add(fakeCard1);
-            creditCardList.Add(fakeCard2);
-            creditCardList.Add(fakeCard3);
-        }
     }
 }

@@ -25,3 +25,5 @@ C:\Users\Behn\Documents\GitHub\Hotel-Booking-System\HotelBookingSystem\HotelBook
 C:\Users\Behn\Documents\GitHub\Hotel-Booking-System\HotelBookingSystem\HotelBookingSystem\obj\Debug\HotelBookingSystem.Form5.resources
 C:\Users\Behn\Documents\GitHub\Hotel-Booking-System\HotelBookingSystem\HotelBookingSystem\obj\Debug\HotelBookingSystem.Form6.resources
 C:\Users\Behn\Documents\GitHub\Hotel-Booking-System\HotelBookingSystem\HotelBookingSystem\bin\Debug\MySql.Data.dll
+C:\Users\Behn\Documents\GitHub\Hotel-Booking-System\HotelBookingSystem\HotelBookingSystem\obj\Debug\HotelBookingSystem.Form7.resources
+C:\Users\Behn\Documents\GitHub\Hotel-Booking-System\HotelBookingSystem\HotelBookingSystem\obj\Debug\HotelBookingSystem.Form8.resources
